@@ -1,0 +1,100 @@
+.photo-lightbox-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 220;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.photo-lightbox-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(17, 17, 17, 0.8);
+  backdrop-filter: blur(5px);
+}
+
+.photo-lightbox-modal__dialog {
+  position: relative;
+  z-index: 1;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-gold);
+  max-width: 920px;
+  width: 100%;
+  max-height: 92vh;
+  overflow-y: auto;
+  padding: 1.85rem;
+  box-shadow: var(--shadow-elevated);
+}
+
+.photo-lightbox-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.photo-lightbox-modal__eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+}
+
+.photo-lightbox-modal__title {
+  font-size: 1.55rem;
+  word-break: break-all;
+}
+
+.photo-lightbox-modal__close {
+  width: 38px;
+  height: 38px;
+  background: transparent;
+  border: 1px solid var(--border-light);
+  font-size: 1.45rem;
+  line-height: 1;
+}
+
+.photo-lightbox-modal__stage {
+  background-color: #0f0f0f;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 62vh;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.photo-lightbox-modal__stage img {
+  max-height: 62vh;
+  width: auto;
+  max-width: 100%;
+  object-fit: contain;
+}
+
+.photo-lightbox-modal__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.photo-lightbox-modal__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+}
+
+.photo-lightbox-modal__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+

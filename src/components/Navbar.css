@@ -1,0 +1,236 @@
+.studio-navbar {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: rgba(255, 255, 255, 0.96);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-light);
+  transition: var(--transition-smooth);
+}
+
+.studio-navbar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 88px;
+}
+
+/* Studio Brand Logo */
+.studio-logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.studio-logo__img {
+  height: 48px;
+  max-width: 240px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}
+
+.studio-logo__mark {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  transition: var(--transition-smooth);
+}
+
+.studio-logo__ring {
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--gold);
+  border-radius: 50%;
+  transition: var(--transition-smooth);
+}
+
+.studio-logo:hover .studio-logo__mark {
+  border-color: var(--gold);
+}
+
+.studio-logo:hover .studio-logo__ring {
+  transform: scale(1.18);
+}
+
+.studio-logo__text {
+  display: flex;
+  flex-direction: column;
+}
+
+.studio-logo__title {
+  font-family: var(--font-serif);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  line-height: 1.1;
+  color: var(--text-primary);
+}
+
+.studio-logo__tagline {
+  font-size: 0.6rem;
+  letter-spacing: 0.26em;
+  color: var(--gold-dark);
+  font-weight: 500;
+  margin-top: 0.15rem;
+}
+
+/* Navigation Links */
+.studio-navbar__list {
+  display: flex;
+  align-items: center;
+  gap: 2.4rem;
+  list-style: none;
+}
+
+.studio-navbar__link {
+  position: relative;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  padding: 0.4rem 0;
+}
+
+.studio-navbar__link::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 1.5px;
+  background-color: var(--gold);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.studio-navbar__link:hover,
+.studio-navbar__link.is-active {
+  color: var(--text-primary);
+}
+
+.studio-navbar__link:hover::after,
+.studio-navbar__link.is-active::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.studio-navbar__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.studio-navbar__portal-btn {
+  padding: 0.62rem 1.25rem;
+  font-size: 0.74rem;
+  letter-spacing: 0.12em;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  text-decoration: none;
+}
+
+.studio-navbar__cta-desktop {
+  padding: 0.68rem 1.5rem;
+  font-size: 0.74rem;
+}
+
+.studio-navbar__cta-mobile {
+  display: none;
+}
+
+/* Mobile Toggle Button */
+.studio-navbar__toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--border-light);
+  padding: 8px;
+}
+
+.studio-navbar__bar {
+  width: 100%;
+  height: 1.5px;
+  background-color: var(--text-primary);
+  transition: var(--transition-smooth);
+}
+
+.studio-navbar__toggle.is-active .studio-navbar__bar:nth-child(1) {
+  transform: translateY(6.5px) rotate(45deg);
+}
+
+.studio-navbar__toggle.is-active .studio-navbar__bar:nth-child(2) {
+  opacity: 0;
+}
+
+.studio-navbar__toggle.is-active .studio-navbar__bar:nth-child(3) {
+  transform: translateY(-6.5px) rotate(-45deg);
+}
+
+/* Tablet & Mobile Responsive */
+@media (max-width: 992px) {
+  .studio-navbar__inner {
+    height: 76px;
+  }
+
+  .studio-navbar__toggle {
+    display: flex;
+  }
+
+  .studio-navbar__cta-desktop {
+    display: none;
+  }
+
+  .studio-navbar__nav {
+    position: fixed;
+    top: 76px;
+    left: 0;
+    right: 0;
+    background-color: var(--bg-primary);
+    border-bottom: 1px solid var(--border-light);
+    padding: 2rem 1.5rem 2.5rem;
+    box-shadow: var(--shadow-elevated);
+    transform: translateY(-120%);
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition-smooth);
+  }
+
+  .studio-navbar__nav.is-open {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .studio-navbar__list {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.25rem;
+  }
+
+  .studio-navbar__link {
+    font-size: 0.92rem;
+  }
+
+  .studio-navbar__cta-mobile {
+    display: block;
+    margin-top: 1.75rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-light);
+  }
+
+  .studio-navbar__cta-mobile .btn {
+    width: 100%;
+  }
+}
+

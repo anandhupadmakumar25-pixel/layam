@@ -1,0 +1,206 @@
+.admin-event-table-wrap {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  overflow-x: auto;
+}
+
+.admin-event-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.admin-event-table th {
+  padding: 1rem 1.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-light);
+  white-space: nowrap;
+}
+
+.admin-event-table td {
+  padding: 1.15rem 1.25rem;
+  border-bottom: 1px solid var(--border-light);
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
+.admin-event-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-event-table tbody tr:hover {
+  background-color: rgba(250, 248, 245, 0.65);
+}
+
+.admin-event-table__primary {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.admin-event-table__thumb {
+  width: 52px;
+  height: 40px;
+  object-fit: cover;
+  border: 1px solid var(--border-light);
+  flex-shrink: 0;
+}
+
+.admin-event-table__name {
+  display: block;
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.92rem;
+}
+
+.admin-event-table__slug {
+  display: block;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+.admin-event-table__cat {
+  display: inline-block;
+  padding: 0.22rem 0.6rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.admin-event-status {
+  display: inline-block;
+  padding: 0.24rem 0.65rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.status--active {
+  background-color: rgba(22, 163, 74, 0.12);
+  color: #15803d;
+}
+
+.status--upcoming {
+  background-color: var(--gold-subtle);
+  color: var(--gold-dark);
+}
+
+.status--archived {
+  background-color: var(--bg-tertiary);
+  color: var(--text-secondary);
+}
+
+.status--draft {
+  background-color: rgba(100, 116, 139, 0.12);
+  color: #475569;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.admin-event-table__actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.admin-action-btn {
+  padding: 0.4rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  transition: var(--transition-smooth);
+}
+
+.admin-action-btn:hover {
+  border-color: var(--text-primary);
+  background-color: var(--text-primary);
+  color: #ffffff;
+}
+
+.admin-action-btn--gold:hover {
+  border-color: var(--gold);
+  background-color: var(--gold);
+  color: #ffffff;
+}
+
+.admin-action-btn--danger:hover {
+  border-color: #b91c1c;
+  background-color: #b91c1c;
+  color: #ffffff;
+}
+
+.admin-event-empty {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  padding: 3.5rem 2rem;
+  text-align: center;
+}
+
+.admin-event-empty h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.admin-event-empty p {
+  color: var(--text-muted);
+  font-size: 0.92rem;
+}
+
+@media (max-width: 860px) {
+  .admin-event-table thead {
+    display: none;
+  }
+
+  .admin-event-table,
+  .admin-event-table tbody,
+  .admin-event-table tr,
+  .admin-event-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .admin-event-table tr {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .admin-event-table td {
+    padding: 0.5rem 0;
+    border-bottom: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    text-align: right;
+  }
+
+  .admin-event-table td::before {
+    content: attr(data-label);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    text-align: left;
+  }
+
+  .admin-event-table__primary {
+    text-align: left;
+  }
+}
+

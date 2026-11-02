@@ -1,0 +1,152 @@
+.admin-access-denied {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: 2.5rem 1.5rem;
+}
+
+.admin-access-denied__card {
+  max-width: 540px;
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid rgba(201, 169, 110, 0.35);
+  border-radius: 12px;
+  padding: 3rem 2.5rem;
+  text-align: center;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-access-denied__card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #c9a96e, #d4af37, #9e7d3b);
+}
+
+.admin-access-denied__badge {
+  display: inline-block;
+  margin-bottom: 1.25rem;
+  padding: 0.25rem 0.75rem;
+  background: rgba(220, 38, 38, 0.08);
+  border: 1px solid rgba(220, 38, 38, 0.25);
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: #b91c1c;
+}
+
+.admin-access-denied__icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #faf8f5;
+  color: #c9a96e;
+  border: 1px solid rgba(201, 169, 110, 0.25);
+}
+
+.admin-access-denied__eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #9e7d3b;
+  margin-bottom: 0.5rem;
+}
+
+.admin-access-denied__title {
+  font-size: 1.75rem;
+  font-weight: 600;
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  color: #1a1a1a;
+  margin: 0 0 1rem;
+}
+
+.admin-access-denied__desc {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #666666;
+  margin: 0 0 2rem;
+}
+
+.admin-access-denied__meta {
+  background: #faf8f5;
+  border: 1px solid rgba(201, 169, 110, 0.2);
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 2rem;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.admin-access-denied__meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.8125rem;
+  color: #555555;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.admin-access-denied__pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.admin-access-denied__pill {
+  padding: 0.15rem 0.5rem;
+  background: #ffffff;
+  border: 1px solid rgba(201, 169, 110, 0.4);
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #1a1a1a;
+  font-weight: 500;
+}
+
+.admin-access-denied__pill.is-muted {
+  color: #888888;
+  font-style: italic;
+}
+
+.admin-access-denied__actions {
+  display: flex;
+  justify-content: center;
+}
+
+.admin-access-denied__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.75rem;
+  background: #111111;
+  color: #ffffff;
+  border: 1px solid #c9a96e;
+  border-radius: 6px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
+}
+
+.admin-access-denied__btn:hover {
+  background: #c9a96e;
+  color: #111111;
+  border-color: #c9a96e;
+}
+

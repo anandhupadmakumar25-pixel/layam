@@ -1,0 +1,534 @@
+/* Location Picker Modal Styling */
+.loc-picker-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  background-color: rgba(13, 14, 18, 0.78);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.loc-picker-modal {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-gold);
+  border-radius: 4px;
+  width: 100%;
+  max-width: 860px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  max-height: 90vh;
+}
+
+.loc-picker-header {
+  padding: 1.5rem 1.75rem 1.25rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-light);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95) 0%, rgba(248, 246, 240, 0.6) 100%);
+}
+
+.loc-picker-eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  margin-bottom: 0.3rem;
+}
+
+.loc-picker-title {
+  font-family: var(--font-serif);
+  font-size: 1.45rem;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.loc-picker-close-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.8rem;
+  line-height: 1;
+  color: var(--text-secondary);
+  cursor: pointer;
+  padding: 0.2rem 0.5rem;
+  transition: color 0.2s ease;
+}
+
+.loc-picker-close-btn:hover {
+  color: var(--text-primary);
+}
+
+/* Toolbar */
+.loc-picker-toolbar {
+  padding: 1rem 1.75rem;
+  background-color: #faf9f6;
+  border-bottom: 1px solid var(--border-light);
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.loc-picker-search-form {
+  display: flex;
+  gap: 0.5rem;
+  flex: 1;
+  min-width: 280px;
+}
+
+.loc-picker-search-input {
+  flex: 1;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.85rem;
+  border: 1px solid var(--border-light);
+  border-radius: 2px;
+  background: #ffffff;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.loc-picker-search-input:focus {
+  border-color: var(--gold);
+}
+
+.loc-picker-search-btn {
+  white-space: nowrap;
+}
+
+.loc-picker-gps-btn {
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Google Maps Layers Bar */
+.loc-picker-layers-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1.75rem;
+  background: #f1efeb;
+  border-bottom: 1px solid var(--border-light);
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.loc-picker-layers-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.loc-picker-layers-group {
+  display: flex;
+  gap: 0.35rem;
+  flex-wrap: wrap;
+}
+
+.loc-layer-btn {
+  background: #ffffff;
+  border: 1px solid var(--border-light);
+  border-radius: 3px;
+  font-size: 0.76rem;
+  font-weight: 500;
+  padding: 0.25rem 0.65rem;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.loc-layer-btn:hover {
+  border-color: var(--gold);
+  color: var(--gold-dark);
+}
+
+.loc-layer-btn.is-active {
+  background: var(--gold-dark);
+  color: #ffffff;
+  border-color: var(--gold-dark);
+  box-shadow: 0 2px 6px rgba(166, 124, 30, 0.25);
+}
+
+.loc-picker-top-gmaps-link {
+  font-size: 0.76rem;
+  font-weight: 600;
+  color: #1a73e8;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-left: auto;
+}
+
+.loc-picker-top-gmaps-link:hover {
+  text-decoration: underline;
+}
+
+.loc-picker-embed-frame {
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+
+/* Search Results Dropdown */
+.loc-picker-results-list {
+  list-style: none;
+  margin: 0;
+  padding: 0.5rem 0;
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-light);
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.loc-picker-results-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.6rem 1.75rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.04);
+  transition: background 0.15s ease;
+}
+
+.loc-picker-results-list li:hover {
+  background: rgba(197, 160, 89, 0.12);
+}
+
+.loc-picker-result-icon {
+  font-size: 1.1rem;
+}
+
+.loc-picker-result-details {
+  display: flex;
+  flex-direction: column;
+}
+
+.loc-picker-result-details strong {
+  font-size: 0.84rem;
+  color: var(--text-primary);
+}
+
+.loc-picker-result-details small {
+  font-size: 0.74rem;
+  color: var(--text-secondary);
+}
+
+/* Alert */
+.loc-picker-alert {
+  padding: 0.65rem 1.75rem;
+  background: #fef2f2;
+  border-bottom: 1px solid #fecaca;
+  color: #991b1b;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Map Canvas Container */
+.loc-picker-map-wrap {
+  position: relative;
+  width: 100%;
+  height: 380px;
+  background: #eae8e1;
+}
+
+.loc-picker-map-canvas {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.loc-picker-map-hint {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 500;
+  background: rgba(17, 17, 17, 0.85);
+  color: #f1f5f9;
+  font-size: 0.74rem;
+  letter-spacing: 0.04em;
+  padding: 0.4rem 0.95rem;
+  border-radius: 20px;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Gold Pin Marker & Pulse */
+.atelier-gold-pin {
+  position: relative;
+  width: 32px;
+  height: 42px;
+}
+
+.atelier-gold-pin__head {
+  width: 26px;
+  height: 26px;
+  background: linear-gradient(135deg, #d4af37 0%, #a67c1e 100%);
+  border: 2.5px solid #ffffff;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  position: absolute;
+  top: 0;
+  left: 3px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.atelier-gold-pin__head::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.atelier-gold-pin__pulse {
+  position: absolute;
+  bottom: -4px;
+  left: 6px;
+  width: 20px;
+  height: 8px;
+  background: rgba(212, 175, 55, 0.45);
+  border-radius: 50%;
+  animation: markerPulse 1.8s infinite ease-out;
+}
+
+@keyframes markerPulse {
+  0% {
+    transform: scale(0.6);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+
+/* Footer Section */
+.loc-picker-footer {
+  padding: 1.25rem 1.75rem;
+  border-top: 1px solid var(--border-light);
+  background: #ffffff;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.loc-picker-selection-info {
+  flex: 1;
+  min-width: 260px;
+}
+
+.loc-picker-selection-info label {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 0.4rem;
+}
+
+.loc-picker-input-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.loc-picker-location-input {
+  width: 100%;
+  padding: 0.65rem 0.95rem;
+  font-size: 0.92rem;
+  border: 1px solid var(--border-gold);
+  border-radius: 2px;
+  background: #fdfcf9;
+  color: var(--text-primary);
+  font-weight: 500;
+  outline: none;
+}
+
+.loc-picker-location-input:focus {
+  border-color: var(--gold-dark);
+  box-shadow: 0 0 0 2px rgba(197, 160, 89, 0.2);
+}
+
+.loc-picker-spinner {
+  position: absolute;
+  right: 12px;
+  font-size: 0.9rem;
+  animation: spinSlow 2s linear infinite;
+}
+
+@keyframes spinSlow {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loc-picker-meta-links {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-top: 0.45rem;
+  font-size: 0.76rem;
+}
+
+.loc-picker-coords {
+  color: var(--text-secondary);
+  font-family: monospace;
+}
+
+.loc-picker-gmaps-link {
+  color: var(--gold-dark);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.loc-picker-gmaps-link:hover {
+  color: var(--text-primary);
+}
+
+.loc-picker-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+@media (max-width: 768px) {
+  .loc-picker-modal {
+    max-height: 96vh;
+  }
+
+  .loc-picker-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .loc-picker-map-wrap {
+    height: 280px;
+  }
+
+  .loc-picker-footer {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 1rem;
+  }
+
+  .loc-picker-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .loc-picker-actions .btn {
+    width: 100%;
+  }
+}
+
+/* Google Maps API Key Setup Box */
+.loc-picker-key-card {
+  background: #fefce8;
+  border-bottom: 1px solid #fef08a;
+  padding: 0.9rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.loc-picker-key-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.loc-picker-key-header strong {
+  font-size: 0.86rem;
+  color: #854d0e;
+}
+
+.loc-picker-key-header small {
+  font-size: 0.74rem;
+  color: #a16207;
+}
+
+.loc-picker-key-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.loc-picker-key-form input {
+  flex: 1;
+  min-width: 250px;
+}
+
+/* Loading Overlay */
+.loc-picker-loading-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(4px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 500;
+}
+
+.loc-picker-spinner-large {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(197, 160, 89, 0.25);
+  border-top-color: var(--gold-dark);
+  border-radius: 50%;
+  animation: spinSlow 0.8s linear infinite;
+}
+
+/* Google Places Autocomplete dropdown z-index override */
+.pac-container {
+  z-index: 10000 !important;
+  font-family: inherit !important;
+  border-radius: 2px !important;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25) !important;
+  border: 1px solid #e2e8f0 !important;
+}
+
+.pac-item {
+  padding: 0.5rem 0.85rem !important;
+  font-size: 0.85rem !important;
+  cursor: pointer !important;
+}
+
+.pac-item:hover,
+.pac-item-selected {
+  background-color: rgba(197, 160, 89, 0.12) !important;
+}
+

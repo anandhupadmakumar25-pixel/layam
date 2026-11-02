@@ -1,0 +1,245 @@
+.about-hero {
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-light);
+  padding: 6.5rem 0 5.5rem;
+  text-align: center;
+}
+
+.about-hero__inner {
+  max-width: 820px;
+}
+
+.about-hero__eyebrow {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  margin-bottom: 1rem;
+}
+
+.about-hero__title {
+  font-size: clamp(2.5rem, 4.6vw, 3.85rem);
+  margin-bottom: 1.35rem;
+}
+
+.about-hero__subtitle {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  max-width: 640px;
+  margin: 0 auto;
+  line-height: 1.75;
+}
+
+/* Story Section */
+.about-story {
+  padding: 6.5rem 0;
+  background-color: var(--bg-primary);
+}
+
+.about-story__grid {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 4.5rem;
+  align-items: center;
+}
+
+.about-story__label {
+  display: inline-block;
+  font-size: 0.74rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.about-story__copy h2 {
+  font-size: clamp(2rem, 3.4vw, 2.85rem);
+  margin-bottom: 1.35rem;
+}
+
+.about-story__copy p {
+  color: var(--text-secondary);
+  margin-bottom: 1.25rem;
+  font-size: 0.98rem;
+}
+
+.about-story__stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.25rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.about-story__stat-item strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--gold-dark);
+  line-height: 1.1;
+}
+
+.about-story__stat-item span {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-muted);
+}
+
+.about-story__images {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border: 1px solid var(--border-light);
+}
+
+.about-story__img-main {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Pillars */
+.about-pillars {
+  padding: 6.5rem 0;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.about-pillars__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.pillar-card {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  padding: 2.5rem 2rem;
+  transition: var(--transition-smooth);
+}
+
+.pillar-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+}
+
+.pillar-card__num {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.pillar-card__title {
+  font-size: 1.55rem;
+  margin-bottom: 0.75rem;
+}
+
+.pillar-card__desc {
+  color: var(--text-secondary);
+  font-size: 0.94rem;
+}
+
+/* Team */
+.about-team {
+  padding: 6.5rem 0;
+  background-color: var(--bg-primary);
+}
+
+.about-team__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2.25rem;
+}
+
+.team-card {
+  border: 1px solid var(--border-light);
+  background-color: var(--bg-primary);
+  transition: var(--transition-smooth);
+}
+
+.team-card:hover {
+  border-color: var(--border-gold);
+  box-shadow: var(--shadow-soft);
+}
+
+.team-card__media {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background-color: var(--bg-tertiary);
+}
+
+.team-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(18%);
+  transition: var(--transition-smooth);
+}
+
+.team-card:hover .team-card__img {
+  filter: grayscale(0%);
+  transform: scale(1.03);
+}
+
+.team-card__body {
+  padding: 1.75rem;
+}
+
+.team-card__role {
+  display: block;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  font-weight: 600;
+  margin-bottom: 0.35rem;
+}
+
+.team-card__name {
+  font-size: 1.55rem;
+  margin-bottom: 0.65rem;
+}
+
+.team-card__bio {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* Bottom CTA */
+.about-cta {
+  padding: 5.5rem 0;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-light);
+  text-align: center;
+}
+
+.about-cta__inner {
+  max-width: 680px;
+}
+
+.about-cta__inner h2 {
+  font-size: clamp(1.9rem, 3vw, 2.5rem);
+  margin-bottom: 1rem;
+}
+
+.about-cta__inner p {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+@media (max-width: 992px) {
+  .about-story__grid,
+  .about-pillars__grid,
+  .about-team__grid {
+    grid-template-columns: 1fr;
+  }
+}
+

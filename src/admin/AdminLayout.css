@@ -1,0 +1,53 @@
+.admin-shell {
+  min-height: 100vh;
+  display: flex;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.admin-shell__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-shell__content {
+  flex: 1;
+  padding: 2.25rem;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.admin-auth-loading {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-secondary);
+  padding: 2rem;
+}
+
+.admin-auth-loading__box {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-gold);
+  padding: 2.5rem 3rem;
+  text-align: center;
+}
+
+.admin-auth-loading__eyebrow {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  color: var(--gold-dark);
+  margin-bottom: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .admin-shell__content {
+    padding: 1.25rem;
+  }
+}
+

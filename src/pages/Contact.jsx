@@ -1,0 +1,229 @@
+import { useState } from 'react'
+import './Contact.css'
+
+const INITIAL_FORM = {
+  fullName: '',
+  email: '',
+  phone: '',
+  serviceType: 'Luxury Wedding',
+  eventDate: '',
+  location: '',
+  message: '',
+}
+
+function Contact() {
+  const [formData, setFormData] = useState(INITIAL_FORM)
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleChange = (e) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setSubmitted(true)
+  }
+
+  const handleReset = () => {
+    setFormData(INITIAL_FORM)
+    setSubmitted(false)
+  }
+
+  return (
+    <div className="contact-page">
+      {/* Hero */}
+      <section className="contact-hero">
+        <div className="container contact-hero__inner fade-up">
+          <span className="contact-hero__eyebrow">Private Concierge</span>
+          <h1 className="contact-hero__title">Inquire &amp; Reserve</h1>
+          <p className="contact-hero__subtitle">
+            Share the details of your upcoming celebration, portrait session, or brand commission.
+            Our senior producer responds to all inquiries within 24 hours.
+          </p>
+        </div>
+      </section>
+
+      {/* Main Content */}
+      <section className="contact-section">
+        <div className="container contact-section__grid">
+          {/* Left Column: Atelier Details */}
+          <aside className="contact-info">
+            <div className="contact-info__card">
+              <span className="contact-info__eyebrow">Studio &amp; Office</span>
+              <h2>Layam Wedding Cinemas Studio</h2>
+              <p className="contact-info__lead">
+                Private consultations and print viewings are hosted by appointment at our SoHo
+                showroom or via private video salon.
+              </p>
+
+              <div className="contact-info__list">
+                <div className="contact-info__item">
+                  <span className="contact-info__label">Address</span>
+                  <p>482 Mercer Street, Suite 4B, New York, NY 10013</p>
+                </div>
+
+                <div className="contact-info__item">
+                  <span className="contact-info__label">Concierge Email</span>
+                  <p>
+                    <a href="mailto:concierge@layamweddingcinemas.com">concierge@layamweddingcinemas.com</a>
+                  </p>
+                </div>
+
+                <div className="contact-info__item">
+                  <span className="contact-info__label">Telephone</span>
+                  <p>
+                    <a href="tel:+12125550194">+1 (212) 555-0194</a>
+                  </p>
+                </div>
+
+                <div className="contact-info__item">
+                  <span className="contact-info__label">Press &amp; Syndication</span>
+                  <p>
+                    <a href="mailto:press@layamweddingcinemas.com">press@layamweddingcinemas.com</a>
+                  </p>
+                </div>
+              </div>
+
+              <div className="contact-info__image-wrap">
+                <img
+                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=85"
+                  alt="Minimalist architectural studio interior"
+                  className="contact-info__img"
+                />
+              </div>
+            </div>
+          </aside>
+
+          {/* Right Column: Bespoke Inquiry Form */}
+          <div className="contact-form-wrap">
+            {submitted ? (
+              <div className="contact-confirmation">
+                <span className="contact-confirmation__badge">Inquiry Received</span>
+                <h2>Thank You, {formData.fullName}</h2>
+                <p>
+                  We have registered your inquiry for a <strong>{formData.serviceType}</strong>
+                  {formData.location ? ` in ${formData.location}` : ''}. Our senior producer will
+                  contact you at <strong>{formData.email}</strong> within one business day with our
+                  availability and bespoke dossier.
+                </p>
+                <button type="button" className="btn btn-outline" onClick={handleReset}>
+                  Submit Another Inquiry
+                </button>
+              </div>
+            ) : (
+              <form className="contact-form" onSubmit={handleSubmit}>
+                <h2 className="contact-form__title">Commission Dossier</h2>
+                <p className="contact-form__subtitle">
+                  Please complete the fields below so we may prepare a tailored proposal.
+                </p>
+
+                <div className="contact-form__row">
+                  <div className="contact-form__field">
+                    <label htmlFor="fullName">Full Name *</label>
+                    <input
+                      id="fullName"
+                      name="fullName"
+                      type="text"
+                      required
+                      placeholder="e.g. Clara Laurent"
+                      value={formData.fullName}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="contact-form__field">
+                    <label htmlFor="email">Email Address *</label>
+                    <input
+                      id="email"
+                      name="email"
+                      type="email"
+                      required
+                      placeholder="clara@domain.com"
+                      value={formData.email}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="contact-form__row">
+                  <div className="contact-form__field">
+                    <label htmlFor="phone">Phone Number</label>
+                    <input
+                      id="phone"
+                      name="phone"
+                      type="tel"
+                      placeholder="+1 (555) 000-0000"
+                      value={formData.phone}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="contact-form__field">
+                    <label htmlFor="serviceType">Commission Type *</label>
+                    <select
+                      id="serviceType"
+                      name="serviceType"
+                      value={formData.serviceType}
+                      onChange={handleChange}
+                    >
+                      <option value="Luxury Wedding">Luxury Wedding &amp; Destination Soirée</option>
+                      <option value="Editorial Portrait">Fine Art &amp; Executive Portraiture</option>
+                      <option value="Private Gala">Private Gala &amp; Cultural Summit</option>
+                      <option value="Brand Campaign">Luxury Brand &amp; Architectural Campaign</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div className="contact-form__row">
+                  <div className="contact-form__field">
+                    <label htmlFor="eventDate">Proposed Date(s)</label>
+                    <input
+                      id="eventDate"
+                      name="eventDate"
+                      type="date"
+                      value={formData.eventDate}
+                      onChange={handleChange}
+                    />
+                  </div>
+
+                  <div className="contact-form__field">
+                    <label htmlFor="location">Venue or City</label>
+                    <input
+                      id="location"
+                      name="location"
+                      type="text"
+                      placeholder="e.g. Lake Como, Italy / New York"
+                      value={formData.location}
+                      onChange={handleChange}
+                    />
+                  </div>
+                </div>
+
+                <div className="contact-form__field">
+                  <label htmlFor="message">Tell Us About Your Vision *</label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    rows="5"
+                    required
+                    placeholder="Share your aesthetic preferences, schedule, estimated guest count, or creative goals..."
+                    value={formData.message}
+                    onChange={handleChange}
+                  />
+                </div>
+
+                <button type="submit" className="btn btn-primary contact-form__submit">
+                  Send Private Inquiry
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
+    </div>
+  )
+}
+
+export default Contact
+

@@ -1,0 +1,321 @@
+.guest-entry-page {
+  min-height: calc(100vh - 180px);
+  padding: 8.5rem 0 5rem;
+  background: linear-gradient(180deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+  display: flex;
+  align-items: center;
+}
+
+.guest-entry__container {
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.guest-entry__brand-logo {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.guest-entry__logo-img {
+  height: 60px;
+  max-width: 280px;
+  width: auto;
+  object-fit: contain;
+  display: inline-block;
+}
+
+.guest-entry-card {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-gold);
+  padding: 3.5rem 3rem;
+  box-shadow: var(--shadow-elevated);
+}
+
+.guest-entry-card--loading,
+.guest-entry-card--error {
+  text-align: center;
+}
+
+.guest-entry__header {
+  text-align: center;
+  margin-bottom: 1.75rem;
+}
+
+.guest-entry__status-pill {
+  display: inline-block;
+  padding: 0.32rem 0.9rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border: 1px solid transparent;
+}
+
+.guest-entry__status-pill--valid {
+  background-color: rgba(22, 163, 74, 0.1);
+  border-color: rgba(22, 163, 74, 0.35);
+  color: #15803d;
+}
+
+.guest-entry__status-pill--error {
+  background-color: rgba(185, 28, 28, 0.1);
+  border-color: rgba(185, 28, 28, 0.35);
+  color: #b91c1c;
+  margin-bottom: 1.25rem;
+}
+
+.guest-entry__title {
+  font-size: clamp(2rem, 4vw, 2.85rem);
+  line-height: 1.15;
+  margin-bottom: 0.6rem;
+}
+
+.guest-entry__subtitle {
+  font-size: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 580px;
+  margin: 0 auto 1.5rem;
+}
+
+.guest-entry__meta {
+  font-size: 0.92rem;
+  color: var(--gold-dark);
+  font-weight: 500;
+  letter-spacing: 0.06em;
+}
+
+.guest-entry__welcome {
+  text-align: center;
+  margin: 1.75rem 0 2.25rem;
+}
+
+.guest-entry__welcome h2 {
+  font-size: 1.65rem;
+  margin-bottom: 0.75rem;
+}
+
+.guest-entry__welcome p {
+  font-size: 0.98rem;
+  color: var(--text-secondary);
+  line-height: 1.75;
+  max-width: 620px;
+  margin: 0 auto 0.75rem;
+}
+
+.guest-entry__event-desc {
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+/* Consent & Privacy Box */
+.guest-entry__consent-box {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  padding: 2.25rem;
+  margin-bottom: 2rem;
+}
+
+.guest-entry__consent-eyebrow {
+  display: block;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  margin-bottom: 0.4rem;
+}
+
+.guest-entry__consent-box h3 {
+  font-size: 1.45rem;
+  margin-bottom: 0.75rem;
+}
+
+.guest-entry__consent-box p {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.25rem;
+}
+
+.guest-entry__privacy-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.guest-entry__privacy-list li {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+  padding-left: 1.25rem;
+  position: relative;
+}
+
+.guest-entry__privacy-list li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  color: var(--gold-dark);
+  font-size: 0.65rem;
+  top: 0.2rem;
+}
+
+.guest-entry__phase-banner {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-gold);
+  padding: 1.1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  text-align: center;
+}
+
+.guest-entry__phase-banner span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+}
+
+.guest-entry__phase-banner small {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+
+/* Consent Checkboxes & Unavailable / Declined States (Phase 8) */
+.guest-entry__inline-error {
+  padding: 0.95rem 1.25rem;
+  background-color: rgba(185, 28, 28, 0.08);
+  border: 1px solid rgba(185, 28, 28, 0.35);
+  color: #b91c1c;
+  font-size: 0.88rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.guest-entry__checkbox-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-light);
+}
+
+.guest-entry__checkbox-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  font-size: 0.88rem;
+  color: var(--text-primary);
+  line-height: 1.55;
+  cursor: pointer;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  padding: 1rem 1.15rem;
+  transition: border-color 0.2s ease;
+}
+
+.guest-entry__checkbox-row:hover {
+  border-color: var(--gold);
+}
+
+.guest-entry__checkbox-row input[type='checkbox'],
+.guest-entry__checkbox-row input[type='radio'] {
+  margin-top: 0.22rem;
+  width: 17px;
+  height: 17px;
+  accent-color: var(--gold-dark);
+  flex-shrink: 0;
+}
+
+.guest-entry__pathway-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.guest-entry__pathway-title {
+  display: block;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-primary);
+  margin-top: 0.25rem;
+}
+
+.guest-entry__guardian-notice {
+  background-color: rgba(198, 166, 109, 0.12);
+  border: 1px solid var(--border-gold);
+  padding: 1rem 1.15rem;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.55;
+}
+
+.guest-entry__checkbox-row a,
+.guest-entry__privacy-list a {
+  color: var(--gold-dark);
+  text-decoration: underline;
+}
+
+.guest-entry__unavailable-box,
+.guest-entry__declined-box {
+  text-align: center;
+  padding: 1.5rem 1rem 0.5rem;
+}
+
+.guest-entry__unavailable-box h2,
+.guest-entry__declined-box h2 {
+  font-size: 1.75rem;
+  margin: 0.4rem 0 0.85rem;
+}
+
+.guest-entry__unavailable-box p,
+.guest-entry__declined-box p {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  max-width: 580px;
+  margin: 0 auto 0.85rem;
+}
+
+
+.guest-entry__error-guidance {
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  padding: 1.25rem 1.5rem;
+  margin: 1.5rem auto 2rem;
+  max-width: 540px;
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.guest-entry__actions,
+.guest-entry__footer-links {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+@media (max-width: 640px) {
+  .guest-entry-page {
+    padding: 7rem 0 3.5rem;
+  }
+
+  .guest-entry-card {
+    padding: 2.25rem 1.5rem;
+  }
+
+  .guest-entry__consent-box {
+    padding: 1.5rem 1.25rem;
+  }
+}
+

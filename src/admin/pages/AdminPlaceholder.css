@@ -1,0 +1,88 @@
+.admin-placeholder-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.75rem;
+}
+
+.admin-placeholder-card {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  padding: 3.5rem 2.5rem;
+  text-align: center;
+  max-width: 780px;
+  margin: 1rem auto 0;
+  width: 100%;
+}
+
+.admin-placeholder-card__badge {
+  display: inline-block;
+  padding: 0.3rem 0.85rem;
+  background-color: var(--gold-subtle);
+  border: 1px solid var(--border-gold);
+  color: var(--gold-dark);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.admin-placeholder-card__title {
+  font-size: 2.25rem;
+  margin-bottom: 0.9rem;
+}
+
+.admin-placeholder-card__desc {
+  color: var(--text-secondary);
+  font-size: 0.98rem;
+  line-height: 1.75;
+  max-width: 580px;
+  margin: 0 auto 2rem;
+}
+
+.admin-placeholder-card__roadmap {
+  text-align: left;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  padding: 1.5rem 1.75rem;
+  margin-bottom: 2rem;
+}
+
+.admin-placeholder-card__roadmap h3 {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  margin-bottom: 0.85rem;
+}
+
+.admin-placeholder-card__roadmap ul {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.admin-placeholder-card__roadmap li {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  padding-left: 1.2rem;
+  position: relative;
+}
+
+.admin-placeholder-card__roadmap li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  color: var(--gold);
+}
+
+.admin-placeholder-card__actions {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+

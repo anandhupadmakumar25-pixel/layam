@@ -1,0 +1,643 @@
+/* 2. Hero Banner */
+.hero-banner {
+  position: relative;
+  min-height: calc(88vh - 88px);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: #ffffff;
+  overflow: hidden;
+  background-color: var(--bg-dark);
+}
+
+.hero-banner__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.hero-banner__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.03);
+  transition: transform 7s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hero-banner:hover .hero-banner__img {
+  transform: scale(1);
+}
+
+.hero-banner__overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 17, 17, 0.6) 0%,
+    rgba(17, 17, 17, 0.42) 50%,
+    rgba(17, 17, 17, 0.85) 100%
+  );
+}
+
+.hero-banner__content {
+  position: relative;
+  z-index: 1;
+  padding: 4.75rem 1.5rem 3.5rem;
+  max-width: 1180px;
+}
+
+.hero-banner__eyebrow {
+  display: inline-block;
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--gold-light);
+  margin-bottom: 1.25rem;
+  animation: fadeIn 1s ease-out;
+}
+
+.hero-banner__title {
+  font-size: clamp(2.5rem, 4.2vw, 4.35rem);
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1.15;
+  margin-bottom: 1.35rem;
+  max-width: 1120px;
+  text-shadow: 0 4px 16px rgba(0, 0, 0, 0.45);
+}
+
+.hero-banner__title-sub {
+  display: block;
+  margin-top: 0.25rem;
+}
+
+.hero-banner__title em {
+  font-style: italic;
+  font-weight: 400;
+  color: var(--gold-light);
+  text-shadow: 0 0 25px rgba(229, 195, 88, 0.35);
+}
+
+.hero-banner__subtitle {
+  font-size: clamp(1.02rem, 1.3vw, 1.18rem);
+  color: rgba(255, 255, 255, 0.9);
+  max-width: 960px;
+  line-height: 1.75;
+  margin-bottom: 2.25rem;
+}
+
+.hero-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+.hero-banner__stats-bar {
+  position: relative;
+  z-index: 1;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  background-color: rgba(17, 17, 17, 0.65);
+  backdrop-filter: blur(12px);
+  padding: 1.25rem 0;
+}
+
+.hero-banner__stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.hero-banner__stat {
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease;
+}
+
+.hero-banner__stat:hover {
+  transform: translateY(-2px);
+}
+
+.hero-banner__stat-value {
+  font-family: var(--font-serif);
+  font-size: 1.95rem;
+  font-weight: 600;
+  color: var(--gold-light);
+  line-height: 1.1;
+  transition: text-shadow 0.3s ease;
+}
+
+.hero-banner__stat:hover .hero-banner__stat-value {
+  text-shadow: 0 0 16px rgba(229, 195, 88, 0.5);
+}
+
+.hero-banner__stat-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.72);
+  margin-top: 0.2rem;
+}
+
+/* 3. Studio Introduction */
+.home-intro {
+  padding: 4.25rem 0;
+  background-color: var(--bg-primary);
+}
+
+.home-intro__grid {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 3rem;
+  align-items: center;
+}
+
+.home-intro__visuals {
+  position: relative;
+}
+
+.home-intro__primary-img-wrap {
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  background-color: var(--bg-tertiary);
+  border-radius: 2px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+}
+
+.home-intro__primary-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.9s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.home-intro__visuals:hover .home-intro__primary-img {
+  transform: scale(1.035);
+}
+
+.home-intro__secondary-card {
+  position: absolute;
+  bottom: -1rem;
+  right: -1rem;
+  max-width: 300px;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-gold);
+  padding: 1.5rem;
+  box-shadow: var(--shadow-elevated);
+  border-radius: 2px;
+  animation: floatSubtle 6s ease-in-out infinite;
+}
+
+@keyframes floatSubtle {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+.home-intro__quote-mark {
+  font-family: var(--font-serif);
+  font-size: 2.75rem;
+  line-height: 0.7;
+  color: var(--gold);
+  display: block;
+  margin-bottom: 0.4rem;
+}
+
+.home-intro__secondary-card p {
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  font-style: italic;
+  color: var(--text-primary);
+  line-height: 1.45;
+  margin-bottom: 0.65rem;
+}
+
+.home-intro__signature {
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  font-weight: 600;
+}
+
+.home-intro__eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+
+.home-intro__title {
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  margin-bottom: 1rem;
+  line-height: 1.18;
+}
+
+.home-intro__divider {
+  width: 56px;
+  height: 1.5px;
+  background-color: var(--gold);
+  margin-bottom: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.home-intro__divider::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, #ffffff, transparent);
+  animation: lineShimmer 2.8s infinite ease-in-out;
+}
+
+.home-intro__lead {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  margin-bottom: 0.85rem;
+  line-height: 1.6;
+}
+
+.home-intro__body {
+  color: var(--text-secondary);
+  font-size: 0.94rem;
+  line-height: 1.7;
+  margin-bottom: 1.5rem;
+}
+
+.home-intro__highlights {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.25rem;
+  padding: 1.15rem 0;
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 1.75rem;
+}
+
+.home-intro__highlights strong {
+  display: block;
+  font-family: var(--font-serif);
+  font-size: 1.18rem;
+  margin-bottom: 0.2rem;
+}
+
+.home-intro__highlights span {
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* 4. Services Section */
+.home-services {
+  padding: 4.25rem 0;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.home-services__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+}
+
+.home-services__cta,
+.home-events__cta {
+  margin-top: 2.25rem;
+  text-align: center;
+}
+
+/* 5. Featured Events Section */
+.home-events {
+  padding: 4.25rem 0;
+  background-color: var(--bg-primary);
+}
+
+.home-events__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+/* 6. How Smart Gallery Works */
+.home-workflow {
+  padding: 4.25rem 0;
+  background-color: var(--bg-secondary);
+  border-top: 1px solid var(--border-light);
+}
+
+.home-workflow__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+.workflow-card {
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  padding: 1.85rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+  transition: var(--transition-smooth);
+}
+
+.workflow-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 42%,
+    rgba(212, 175, 55, 0.09) 50%,
+    transparent 58%
+  );
+  transform: rotate(25deg) translateY(-120%);
+  transition: transform 0.8s ease;
+  pointer-events: none;
+}
+
+.workflow-card:hover::after {
+  transform: rotate(25deg) translateY(120%);
+}
+
+.workflow-card:hover {
+  border-color: var(--gold);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+}
+
+.workflow-card__number {
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: var(--gold);
+  line-height: 1;
+  display: block;
+  margin-bottom: 0.85rem;
+}
+
+.workflow-card__title {
+  font-size: 1.25rem;
+  margin-bottom: 0.6rem;
+}
+
+.workflow-card__desc {
+  font-size: 0.88rem;
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+/* 7. Guest Access & Studio Dashboard Section */
+.home-concierge {
+  padding: 4.25rem 0;
+  background: linear-gradient(180deg, var(--bg-primary) 0%, rgba(197, 160, 89, 0.05) 50%, var(--bg-primary) 100%);
+  border-top: 1px solid var(--border-light);
+  border-bottom: 1px solid var(--border-light);
+  position: relative;
+}
+
+.home-concierge__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.5rem;
+  margin-top: 2.25rem;
+}
+
+.concierge-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  padding: 2.25rem 2rem;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.03);
+  transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.concierge-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--border-gold), transparent);
+  opacity: 0.7;
+}
+
+.concierge-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    60deg,
+    transparent 40%,
+    rgba(212, 175, 55, 0.08) 50%,
+    transparent 60%
+  );
+  transform: rotate(25deg) translateY(-120%);
+  transition: transform 0.8s ease;
+  pointer-events: none;
+}
+
+.concierge-card:hover::after {
+  transform: rotate(25deg) translateY(120%);
+}
+
+.concierge-card--staff {
+  border-color: rgba(212, 175, 55, 0.4);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(249, 246, 240, 0.88) 100%);
+}
+
+.concierge-card__badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--gold-dark);
+  background: rgba(197, 160, 89, 0.12);
+  padding: 0.3rem 0.8rem;
+  border-radius: 2px;
+  margin-bottom: 1.15rem;
+  border: 1px solid rgba(197, 160, 89, 0.25);
+}
+
+.concierge-card__badge--gold {
+  color: #926f1a;
+  background: rgba(212, 175, 55, 0.18);
+  border-color: rgba(212, 175, 55, 0.4);
+}
+
+.concierge-card__title {
+  font-family: var(--font-serif);
+  font-size: 1.55rem;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  line-height: 1.25;
+}
+
+.concierge-card__desc {
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.7;
+  margin-bottom: 1.35rem;
+}
+
+.concierge-card__features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.75rem 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+}
+
+.concierge-card__features li {
+  font-size: 0.86rem;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.concierge-card__features li span {
+  color: var(--gold-dark);
+  font-weight: 700;
+}
+
+.concierge-card__actions {
+  margin-top: auto;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+/* 8. Call-to-Action Section */
+.home-cta {
+  padding: 4.5rem 0;
+  background-color: var(--bg-dark);
+  color: #ffffff;
+  text-align: center;
+}
+
+.home-cta__inner {
+  max-width: 720px;
+}
+
+.home-cta__eyebrow {
+  display: inline-block;
+  font-size: 0.72rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--gold);
+  font-weight: 600;
+  margin-bottom: 0.85rem;
+}
+
+.home-cta__title {
+  font-size: clamp(2rem, 3.6vw, 3rem);
+  color: #ffffff;
+  margin-bottom: 1rem;
+}
+
+.home-cta__desc {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin-bottom: 2rem;
+}
+
+.home-cta__buttons {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 1024px) {
+  .home-intro__grid {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
+  .home-intro__secondary-card {
+    right: 0.5rem;
+    bottom: 0.5rem;
+  }
+
+  .home-events__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .home-workflow__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .home-concierge__grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .home-intro,
+  .home-services,
+  .home-events,
+  .home-workflow,
+  .home-concierge,
+  .home-cta {
+    padding: 3.5rem 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-banner__stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .home-services__grid,
+  .home-events__grid,
+  .home-workflow__grid,
+  .home-intro__highlights,
+  .home-concierge__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .concierge-card {
+    padding: 1.85rem 1.35rem;
+  }
+
+  .home-intro__secondary-card {
+    position: static;
+    max-width: 100%;
+    margin-top: 1rem;
+  }
+
+  .home-intro,
+  .home-services,
+  .home-events,
+  .home-workflow,
+  .home-concierge,
+  .home-cta {
+    padding: 2.75rem 0;
+  }
+}
