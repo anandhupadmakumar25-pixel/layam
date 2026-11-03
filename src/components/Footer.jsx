@@ -1,7 +1,55 @@
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import './Footer.css'
 
+const WHATSAPP_NUMBERS = [
+  {
+    region: 'India',
+    display: '+91 85890 50510',
+    url: 'https://wa.me/918589050510?text=Hello%20Layam%20Wedding%20Cinemas,%20I%20would%20like%20to%20inquire%20about%20your%20services',
+  },
+  {
+    region: 'Dubai',
+    display: '+971 52 960 7091',
+    url: 'https://wa.me/971529607091?text=Hello%20Layam%20Wedding%20Cinemas,%20I%20would%20like%20to%20inquire%20about%20your%20services',
+  },
+]
+
+function WhatsAppIcon({ className = '', size = 20 }) {
+  return (
+    <svg
+      className={className}
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      aria-hidden="true"
+    >
+      <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
+    </svg>
+  )
+}
+
 function Footer() {
+  const [waOpen, setWaOpen] = useState(false)
+  const waContainerRef = useRef(null)
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (waContainerRef.current && !waContainerRef.current.contains(e.target)) {
+        setWaOpen(false)
+      }
+    }
+    if (waOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      document.addEventListener('touchstart', handleClickOutside)
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('touchstart', handleClickOutside)
+    }
+  }, [waOpen])
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -16,11 +64,11 @@ function Footer() {
           {/* Top: Instagram Camera Outline Icon + Handle */}
           <div className="minimal-footer__instagram-top">
             <a
-              href="https://instagram.com/layamweddingcinemas"
+              href="https://www.instagram.com/_layam_wedding_cinemas_?dlrf=MTB6OTAyMzAwZ2xpbQ=="
               target="_blank"
               rel="noreferrer"
               className="minimal-footer__ig-link"
-              aria-label="Instagram @layamweddingcinemas"
+              aria-label="Instagram @_layam_wedding_cinemas_"
             >
               <svg
                 className="minimal-footer__ig-icon"
@@ -41,11 +89,11 @@ function Footer() {
             </a>
           </div>
 
-          {/* Social Icons Row: Facebook, X, Instagram, Pinterest, YouTube, Vimeo, LinkedIn */}
+          {/* 4 Official Social Icons: Facebook, Instagram, YouTube, LinkedIn */}
           <div className="minimal-footer__socials" aria-label="Social media channels">
             {/* Facebook */}
             <a
-              href="https://facebook.com"
+              href="https://www.facebook.com/layamhari/"
               target="_blank"
               rel="noreferrer"
               className="minimal-footer__social-btn"
@@ -56,22 +104,9 @@ function Footer() {
               </svg>
             </a>
 
-            {/* X (formerly Twitter) */}
-            <a
-              href="https://twitter.com"
-              target="_blank"
-              rel="noreferrer"
-              className="minimal-footer__social-btn"
-              aria-label="X"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-              </svg>
-            </a>
-
             {/* Instagram */}
             <a
-              href="https://instagram.com/layamweddingcinemas"
+              href="https://www.instagram.com/_layam_wedding_cinemas_?dlrf=MTB6OTAyMzAwZ2xpbQ=="
               target="_blank"
               rel="noreferrer"
               className="minimal-footer__social-btn"
@@ -93,22 +128,9 @@ function Footer() {
               </svg>
             </a>
 
-            {/* Pinterest */}
-            <a
-              href="https://pinterest.com"
-              target="_blank"
-              rel="noreferrer"
-              className="minimal-footer__social-btn"
-              aria-label="Pinterest"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.098.119.112.224.083.345-.09.375-.291 1.199-.334 1.357-.057.238-.19.288-.438.173-1.636-.762-2.658-3.153-2.658-5.076 0-4.135 3.004-7.935 8.667-7.935 4.551 0 8.089 3.244 8.089 7.581 0 4.522-2.851 8.163-6.808 8.163-1.329 0-2.579-.691-3.006-1.506l-.818 3.118c-.296 1.129-1.096 2.544-1.634 3.407C9.324 23.86 10.638 24 12 24c6.627 0 12-5.373 12-12 0-6.628-5.373-12-12-12z" />
-              </svg>
-            </a>
-
             {/* YouTube */}
             <a
-              href="https://youtube.com"
+              href="https://youtube.com/@layamweddingcinemas?si=X9mgYn1fBNASanmx"
               target="_blank"
               rel="noreferrer"
               className="minimal-footer__social-btn"
@@ -119,22 +141,9 @@ function Footer() {
               </svg>
             </a>
 
-            {/* Vimeo */}
-            <a
-              href="https://vimeo.com"
-              target="_blank"
-              rel="noreferrer"
-              className="minimal-footer__social-btn"
-              aria-label="Vimeo"
-            >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M23.977 6.416c-.105 2.338-1.739 5.543-4.894 9.609-3.268 4.247-6.026 6.37-8.29 6.37-1.409 0-2.578-1.294-3.553-3.881L5.322 11.4C4.603 8.816 3.834 7.525 3.01 7.525c-.179 0-.806.378-1.881 1.131L0 7.271c1.171-1.025 2.324-2.053 3.456-3.084 1.558-1.378 2.684-2.109 3.379-2.193 1.636-.188 2.646.924 3.031 3.334.412 2.581.701 4.195.867 4.843.501 2.219 1.05 3.328 1.649 3.328.461 0 1.127-.726 1.996-2.181.872-1.455 1.341-2.548 1.409-3.278.14-1.264-.366-1.896-1.518-1.896-.549 0-1.125.127-1.729.378 1.122-3.666 3.253-5.447 6.394-5.342 2.329.076 3.447 1.583 3.354 4.521z" />
-              </svg>
-            </a>
-
             {/* LinkedIn */}
             <a
-              href="https://linkedin.com"
+              href="https://www.linkedin.com/in/layam-wedding-cinemas-59069b346?utm_source=share_via&utm_content=profile&utm_medium=member_ios"
               target="_blank"
               rel="noreferrer"
               className="minimal-footer__social-btn"
@@ -160,7 +169,7 @@ function Footer() {
             All content Copyright &copy; {new Date().getFullYear()} Layam Wedding Cinemas
           </p>
 
-          {/* Centered Scroll to Top Button (Exact Flared Arrowhead + Vertical Stem from Reference) */}
+          {/* Centered Scroll to Top Button */}
           <div className="minimal-footer__scroll-top-wrap">
             <button
               type="button"
@@ -187,27 +196,56 @@ function Footer() {
         </div>
       </footer>
 
-      {/* Floating WhatsApp Action Button (Fixed Bottom-Right, Scrolls With Screen) */}
-      <a
-        href="https://wa.me/919847012345?text=Hello%20Layam%20Wedding%20Cinemas,%20I%20would%20like%20to%20inquire%20about%20your%20services"
-        target="_blank"
-        rel="noreferrer"
-        className="floating-whatsapp"
-        aria-label="Chat on WhatsApp"
-        title="Chat on WhatsApp"
-      >
-        <span className="floating-whatsapp__pulse" aria-hidden="true" />
-        <svg
-          className="floating-whatsapp__icon"
-          width="32"
-          height="32"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          aria-hidden="true"
+      {/* Floating WhatsApp Action Widget (Shows India & Dubai Numbers on Click) */}
+      <div className="floating-whatsapp-wrapper" ref={waContainerRef}>
+        {waOpen && (
+          <div className="floating-whatsapp__menu" role="dialog" aria-label="Choose WhatsApp Number">
+            <div className="floating-whatsapp__menu-header">
+              <span>Chat on WhatsApp</span>
+              <button
+                type="button"
+                className="floating-whatsapp__menu-close"
+                onClick={() => setWaOpen(false)}
+                aria-label="Close WhatsApp menu"
+              >
+                &times;
+              </button>
+            </div>
+            <div className="floating-whatsapp__menu-list">
+              {WHATSAPP_NUMBERS.map((item) => (
+                <a
+                  key={item.region}
+                  href={item.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="floating-whatsapp__number-link"
+                  onClick={() => setWaOpen(false)}
+                >
+                  <span className="floating-whatsapp__number-icon">
+                    <WhatsAppIcon size={18} />
+                  </span>
+                  <span className="floating-whatsapp__number-info">
+                    <small>{item.region}</small>
+                    <strong>{item.display}</strong>
+                  </span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <button
+          type="button"
+          className="floating-whatsapp"
+          onClick={() => setWaOpen((prev) => !prev)}
+          aria-expanded={waOpen}
+          aria-label="Chat on WhatsApp"
+          title="Chat on WhatsApp"
         >
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-        </svg>
-      </a>
+          <span className="floating-whatsapp__pulse" aria-hidden="true" />
+          <WhatsAppIcon className="floating-whatsapp__icon" size={32} />
+        </button>
+      </div>
     </>
   )
 }

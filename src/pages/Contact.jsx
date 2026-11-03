@@ -70,9 +70,26 @@ function Contact() {
                 </div>
 
                 <div className="contact-info__item">
-                  <span className="contact-info__label">Telephone</span>
+                  <span className="contact-info__label">Telephone &amp; WhatsApp</span>
                   <p>
-                    <a href="tel:+919744860510">+91 9744860510</a>
+                    India: <a href="tel:+919744860510">+91 9744860510</a> &bull;{' '}
+                    <a
+                      href="https://wa.me/918589050510"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      +91 85890 50510
+                    </a>
+                  </p>
+                  <p style={{ marginTop: '0.3rem' }}>
+                    Dubai:{' '}
+                    <a
+                      href="https://wa.me/971529607091"
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      +971 52 960 7091
+                    </a>
                   </p>
                 </div>
               </div>
