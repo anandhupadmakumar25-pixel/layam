@@ -30,11 +30,17 @@ function EventLightbox({ event, onClose }) {
 
         <div className="event-lightbox__grid">
           {event.galleryPreview.map((imgUrl, index) => (
-            <div key={imgUrl} className="event-lightbox__item">
+            <div
+              key={imgUrl}
+              className="event-lightbox__item"
+              style={{ '--lightbox-bg': `url("${imgUrl}")` }}
+            >
               <img
                 src={imgUrl}
                 alt={`${event.title} frame ${index + 1}`}
                 className="event-lightbox__img"
+                loading="lazy"
+                decoding="async"
               />
             </div>
           ))}

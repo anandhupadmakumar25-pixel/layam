@@ -158,13 +158,13 @@ function Home() {
             loop
             muted
             playsInline
-            preload="auto"
-            poster="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=85"
+            preload="metadata"
+            poster="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80"
           >
             <source src="/hero-bg.MP4" type="video/mp4" />
-            <source src="/hero-bg.MP4" type="video/mp4" />
+            <source src="/hero-bg.mp4" type="video/mp4" />
             <img
-              src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=2000&q=85"
+              src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1600&q=80"
               alt="Luxury wedding celebration captured by Layam Wedding Cinemas"
               className="hero-banner__img"
             />
@@ -311,12 +311,14 @@ function Home() {
                   <div
                     key={`${slide.id}-${sIdx}`}
                     className="services-showcase__slide"
+                    style={{ '--slide-bg': `url("${slide.image}")` }}
                   >
                     <img
                       src={slide.image}
                       alt={slide.title}
                       className="services-showcase__card-img"
-                      loading={sIdx === 1 ? 'eager' : 'lazy'}
+                      loading={sIdx <= 2 ? 'eager' : 'lazy'}
+                      decoding="async"
                     />
                     <div className="services-showcase__overlay">
                       <div className="services-showcase__details">
@@ -362,6 +364,8 @@ function Home() {
                     src={service.image}
                     alt={service.category}
                     className="services-showcase__thumb-img"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </button>
               ))}

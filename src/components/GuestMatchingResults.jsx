@@ -32,9 +32,13 @@ function GuestMatchingResults({
     }
     if (selectedPhoto) {
       window.addEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
     }
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = ''
     }
   }, [selectedPhoto])
 

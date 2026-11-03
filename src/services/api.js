@@ -233,6 +233,148 @@ export async function deleteEvent(eventId) {
   return handleResponse(response)
 }
 
+function compressImageForCover(file, maxDimension = 1600, quality = 0.86) {
+  return new Promise((resolve) => {
+    if (!file || !file.type || !file.type.startsWith('image/')) {
+      resolve(file)
+      return
+    }
+    const img = new Image()
+    const objectUrl = URL.createObjectURL(file)
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl)
+      let { width, height } = img
+      if (width <= maxDimension && height <= maxDimension && file.size <= 600 * 1024) {
+        resolve(file)
+        return
+      }
+      if (width > maxDimension || height > maxDimension) {
+        const scale = maxDimension / Math.max(width, height)
+        width = Math.round(width * scale)
+        height = Math.round(height * scale)
+      }
+      const canvas = document.createElement('canvas')
+      canvas.width = width
+      canvas.height = height
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        resolve(file)
+        return
+      }
+      ctx.drawImage(img, 0, 0, width, height)
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            resolve(file)
+            return
+          }
+          const baseName = (file.name || 'event-cover').replace(/\.[^.]+$/, '')
+          const compressedFile = new File([blob], `${baseName}.jpg`, {
+            type: 'image/jpeg',
+            lastModified: Date.now(),
+          })
+          resolve(compressedFile)
+        },
+        'image/jpeg',
+        quality
+      )
+    }
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl)
+      resolve(file)
+    }
+    img.src = objectUrl
+  })
+}
+
+function xhrUploadFormData(url, formData, onProgress) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', url)
+    xhr.upload.onprogress = (ev) => {
+      if (ev.lengthComputable && typeof onProgress === 'function') {
+        onProgress(Math.min(98, Math.round((ev.loaded / ev.total) * 100)))
+      }
+    }
+    xhr.onload = () => {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        try {
+          resolve(JSON.parse(xhr.responseText))
+        } catch {
+          reject(new Error('Invalid JSON response from cloud image server.'))
+        }
+      } else {
+        reject(new Error(`Cloud upload failed with status ${xhr.status}`))
+      }
+    }
+    xhr.onerror = () => reject(new Error('Network error while uploading cover image to cloud.'))
+    xhr.send(formData)
+  })
+}
+
+export async function uploadCoverImageToCloud(file, onProgress) {
+  if (!file) {
+    throw new Error('Please select an image file to upload.')
+  }
+  if (typeof onProgress === 'function') onProgress(5)
+
+  const optimizedFile = await compressImageForCover(file)
+  const safeName =
+    (optimizedFile.name || 'cover.jpg').replace(/[^a-zA-Z0-9._-]/g, '_') || 'cover.jpg'
+
+  // 1. Optional ImgBB API key if configured in environment
+  const imgbbKey = import.meta.env.VITE_IMGBB_API_KEY
+  if (imgbbKey && imgbbKey.trim()) {
+    try {
+      const fd = new FormData()
+      fd.append('image', optimizedFile, safeName)
+      const res = await xhrUploadFormData(
+        `https://api.imgbb.com/1/upload?key=${encodeURIComponent(imgbbKey.trim())}`,
+        fd,
+        onProgress
+      )
+      if (res?.data?.url) {
+        if (typeof onProgress === 'function') onProgress(100)
+        return res.data.url
+      }
+    } catch {
+      // Fall through to default cloud CDN
+    }
+  }
+
+  // 2. Primary Cloud CDN (Uploadcare CDN)
+  try {
+    const pubKey = import.meta.env.VITE_UPLOADCARE_PUBLIC_KEY || 'demopublickey'
+    const fd = new FormData()
+    fd.append('UPLOADCARE_PUB_KEY', pubKey)
+    fd.append('UPLOADCARE_STORE', '1')
+    fd.append('file', optimizedFile, safeName)
+    const res = await xhrUploadFormData('https://upload.uploadcare.com/base/', fd, onProgress)
+    if (res?.file) {
+      if (typeof onProgress === 'function') onProgress(100)
+      return `https://ucarecdn.com/${res.file}/${safeName}`
+    }
+  } catch {
+    // Fall through to backup cloud CDN
+  }
+
+  // 3. Fallback Cloud Host (tmpfiles CDN direct link)
+  const fallbackFd = new FormData()
+  fallbackFd.append('file', optimizedFile, safeName)
+  const fallbackRes = await xhrUploadFormData(
+    'https://tmpfiles.org/api/v1/upload',
+    fallbackFd,
+    onProgress
+  )
+  const rawUrl = fallbackRes?.data?.url
+  if (rawUrl) {
+    if (typeof onProgress === 'function') onProgress(100)
+    return rawUrl.replace('https://tmpfiles.org/', 'https://tmpfiles.org/dl/')
+  }
+
+  throw new Error('Unable to upload cover image to cloud. Please try again or paste a direct URL.')
+}
+
 /* Photo Gallery Endpoints (Phase 4) */
 export async function fetchEventPhotos(
   eventId,
@@ -303,8 +445,133 @@ function uploadChunkWithProgress(eventId, filesChunk, onChunkProgress) {
   })
 }
 
+function canvasToJpegBlob(img, targetWidth, targetHeight, quality) {
+  return new Promise((resolve) => {
+    const canvas = document.createElement('canvas')
+    canvas.width = targetWidth
+    canvas.height = targetHeight
+    const ctx = canvas.getContext('2d')
+    if (!ctx) {
+      canvas.width = 0
+      canvas.height = 0
+      resolve(null)
+      return
+    }
+    ctx.imageSmoothingEnabled = true
+    ctx.imageSmoothingQuality = 'high'
+    ctx.drawImage(img, 0, 0, targetWidth, targetHeight)
+    canvas.toBlob(
+      (blob) => {
+        // Immediately release canvas backing store RAM
+        canvas.width = 0
+        canvas.height = 0
+        resolve(blob)
+      },
+      'image/jpeg',
+      quality
+    )
+  })
+}
+
+export async function smartCompressGalleryPhoto(file) {
+  const SKIP_BELOW_BYTES = 6 * 1024 * 1024 // <= 6 MB: already compressed, upload untouched
+  const MAX_TARGET_BYTES = Math.floor(9.5 * 1024 * 1024) // Strictly below 10 MB
+
+  if (!file || !file.size || file.size <= SKIP_BELOW_BYTES) {
+    return file
+  }
+
+  const isCompressibleImage =
+    (file.type && /^image\/(jpe?g|png|webp)$/i.test(file.type)) ||
+    /\.(jpe?g|png|webp)$/i.test(file.name || '')
+  if (!isCompressibleImage) {
+    return file
+  }
+
+  return new Promise((resolve) => {
+    const img = new Image()
+    const objectUrl = URL.createObjectURL(file)
+
+    img.onload = async () => {
+      URL.revokeObjectURL(objectUrl)
+      try {
+        const origW = img.naturalWidth || img.width
+        const origH = img.naturalHeight || img.height
+        if (!origW || !origH) {
+          resolve(file)
+          return
+        }
+
+        // Smart Guard: Check bytes-per-megapixel to avoid re-compressing already compressed images <= 10 MB
+        const megapixels = (origW * origH) / 1_000_000
+        const mbPerMp = file.size / (1024 * 1024) / Math.max(0.5, megapixels)
+        if (file.size <= MAX_TARGET_BYTES && mbPerMp < 0.38) {
+          resolve(file)
+          return
+        }
+
+        // Pass 1: Archival high-clarity pass (up to 5500px long edge @ 92% quality)
+        const attempts = [
+          { maxDim: 5500, quality: 0.92 },
+          { maxDim: 4600, quality: 0.88 },
+          { maxDim: 3840, quality: 0.84 },
+        ]
+
+        let selectedBlob = null
+        for (const step of attempts) {
+          let w = origW
+          let h = origH
+          if (Math.max(w, h) > step.maxDim) {
+            const scale = step.maxDim / Math.max(w, h)
+            w = Math.round(w * scale)
+            h = Math.round(h * scale)
+          }
+
+          const blob = await canvasToJpegBlob(img, w, h, step.quality)
+          if (!blob) break
+          selectedBlob = blob
+          if (blob.size <= MAX_TARGET_BYTES) {
+            break
+          }
+        }
+
+        if (!selectedBlob) {
+          resolve(file)
+          return
+        }
+
+        // Minimum Savings Guard: If original was already <= 10 MB and compression saved < 20%, keep original untouched
+        if (file.size <= MAX_TARGET_BYTES && selectedBlob.size > file.size * 0.8) {
+          resolve(file)
+          return
+        }
+
+        // Preserve original base filename with .jpg extension
+        const baseName = (file.name || 'photograph').replace(/\.[^.]+$/, '')
+        const extMatch = (file.name || '').match(/\.(jpe?g)$/i)
+        const finalName = extMatch ? file.name : `${baseName}.jpg`
+
+        const compressedFile = new File([selectedBlob], finalName, {
+          type: 'image/jpeg',
+          lastModified: file.lastModified || Date.now(),
+        })
+        resolve(compressedFile)
+      } catch {
+        resolve(file)
+      }
+    }
+
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl)
+      resolve(file)
+    }
+
+    img.src = objectUrl
+  })
+}
+
 export async function uploadEventPhotos(eventId, files, onProgress) {
-  const CHUNK_SIZE = 4
+  const CHUNK_SIZE = 2
   const CONCURRENCY = 2
   const totalFiles = files.length
 
@@ -347,9 +614,14 @@ export async function uploadEventPhotos(eventId, files, onProgress) {
 
   async function processChunk(chunkItem) {
     const { index, files: chunkFiles } = chunkItem
+    // Compress large (> 6 MB) uncompressed camera files just-in-time per batch to < 10 MB
+    const preparedFiles = await Promise.all(
+      chunkFiles.map((f) => smartCompressGalleryPhoto(f))
+    )
+
     const result = await uploadChunkWithProgress(
       eventId,
-      chunkFiles,
+      preparedFiles,
       (loaded, total) => {
         chunkProgressMap.set(index, { loaded, total })
         updateGlobalProgress()

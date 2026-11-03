@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import EventTable from '../components/EventTable.jsx'
 import LiveEventHubModal from '../components/LiveEventHubModal.jsx'
@@ -8,6 +8,7 @@ import {
   deleteEvent,
   fetchEvents,
   updateEvent,
+  uploadCoverImageToCloud,
 } from '../../services/api.js'
 import './AdminEvents.css'
 
@@ -18,7 +19,7 @@ const EMPTY_FORM = {
   description: '',
   event_date: getTodayDateString(),
   location: '',
-  category: 'Matrimony & Celebration',
+  category: 'Weddings',
   cover_image: '',
   photo_count: 0,
   status: 'Active',
@@ -43,6 +44,13 @@ function AdminEvents() {
   const [liveHubEvent, setLiveHubEvent] = useState(null)
   const [locationPickerOpen, setLocationPickerOpen] = useState(false)
   const [gpsLocating, setGpsLocating] = useState(false)
+
+  // Cover Image Cloud Upload State
+  const coverFileInputRef = useRef(null)
+  const [coverUploading, setCoverUploading] = useState(false)
+  const [coverUploadProgress, setCoverUploadProgress] = useState(0)
+  const [coverUploadStatus, setCoverUploadStatus] = useState('')
+  const [coverDragOver, setCoverDragOver] = useState(false)
 
   const loadEvents = async () => {
     setLoading(true)
@@ -92,8 +100,46 @@ function AdminEvents() {
     setFormData(EMPTY_FORM)
     setApiError('')
     setFieldErrors({})
+    setCoverUploading(false)
+    setCoverUploadProgress(0)
+    setCoverUploadStatus('')
     if (searchParams.has('action')) {
       setSearchParams({})
+    }
+  }
+
+  const handleCoverFileSelect = async (file) => {
+    if (!file) return
+    if (!file.type || !file.type.startsWith('image/')) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        cover_image: 'Please select a valid image file (JPG, PNG, or WEBP).',
+      }))
+      return
+    }
+
+    setFieldErrors((prev) => ({ ...prev, cover_image: '' }))
+    setCoverUploading(true)
+    setCoverUploadProgress(10)
+    setCoverUploadStatus('Uploading image to cloud...')
+
+    try {
+      const uploadedUrl = await uploadCoverImageToCloud(file, (pct) => {
+        setCoverUploadProgress(pct)
+      })
+      setFormData((prev) => ({ ...prev, cover_image: uploadedUrl }))
+      setCoverUploadStatus('✓ Uploaded to cloud & URL loaded')
+    } catch (err) {
+      setFieldErrors((prev) => ({
+        ...prev,
+        cover_image: err.message || 'Failed to upload cover image to cloud.',
+      }))
+      setCoverUploadStatus('')
+    } finally {
+      setCoverUploading(false)
+      if (coverFileInputRef.current) {
+        coverFileInputRef.current.value = ''
+      }
     }
   }
 
@@ -355,10 +401,11 @@ function AdminEvents() {
                   value={formData.category}
                   onChange={handleChange}
                 >
-                  <option value="Matrimony & Celebration">Matrimony &amp; Celebration</option>
-                  <option value="Corporate Events">Corporate Events</option>
-                  <option value="Brand Concept Shoots">Brand Concept Shoots</option>
-                  <option value="Moments & Celebrations">Moments &amp; Celebrations</option>
+                  <option value="Weddings">Weddings (Matrimony &amp; Celebration)</option>
+                  <option value="Galas">Corporate Events &amp; Galas</option>
+                  <option value="Brand">Brand Concept Shoots</option>
+                  <option value="Portraits">Moments &amp; Celebrations (Portraits)</option>
+                  <option value="Editorial">Editorial</option>
                 </select>
                 {renderFieldError('category')}
               </div>
@@ -394,15 +441,118 @@ function AdminEvents() {
             </div>
 
             <div className="admin-form-field">
-              <label htmlFor="ev-cover">Event Cover Image URL</label>
+              <div className="admin-form-field__label-row">
+                <label htmlFor="ev-cover">Event Cover Image (Upload to Cloud or Paste URL)</label>
+                <div className="admin-form-field__actions">
+                  {coverUploadStatus && !coverUploading && (
+                    <span className="admin-cover-upload__badge">{coverUploadStatus}</span>
+                  )}
+                  <button
+                    type="button"
+                    className="btn-text-action btn-text-action--gold"
+                    disabled={coverUploading}
+                    onClick={() => coverFileInputRef.current?.click()}
+                  >
+                    {coverUploading
+                      ? `☁️ Uploading (${coverUploadProgress}%)...`
+                      : '☁️ Upload Image from Device'}
+                  </button>
+                  {formData.cover_image && (
+                    <button
+                      type="button"
+                      className="btn-text-action"
+                      onClick={() => {
+                        setFormData((prev) => ({ ...prev, cover_image: '' }))
+                        setCoverUploadStatus('')
+                      }}
+                    >
+                      ✕ Clear
+                    </button>
+                  )}
+                </div>
+              </div>
+
               <input
-                id="ev-cover"
-                name="cover_image"
-                type="url"
-                placeholder="https://images.unsplash.com/photo-... (leave blank for default editorial cover)"
-                value={formData.cover_image}
-                onChange={handleChange}
+                ref={coverFileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                style={{ display: 'none' }}
+                onChange={(e) => {
+                  const file = e.target.files?.[0]
+                  if (file) handleCoverFileSelect(file)
+                }}
               />
+
+              <div
+                className={`admin-cover-upload-zone ${coverDragOver ? 'is-dragover' : ''} ${
+                  coverUploading ? 'is-uploading' : ''
+                }`}
+                onDragOver={(e) => {
+                  e.preventDefault()
+                  setCoverDragOver(true)
+                }}
+                onDragLeave={() => setCoverDragOver(false)}
+                onDrop={(e) => {
+                  e.preventDefault()
+                  setCoverDragOver(false)
+                  const file = e.dataTransfer?.files?.[0]
+                  if (file) handleCoverFileSelect(file)
+                }}
+              >
+                <div className="admin-cover-upload-zone__controls">
+                  <div className="admin-form-field__input-with-tools admin-cover-upload-zone__input-wrap">
+                    <input
+                      id="ev-cover"
+                      name="cover_image"
+                      type="url"
+                      placeholder="Upload an image to auto-fill cloud URL, or paste https://... URL"
+                      value={formData.cover_image}
+                      onChange={(e) => {
+                        setCoverUploadStatus('')
+                        handleChange(e)
+                      }}
+                    />
+                    <button
+                      type="button"
+                      className="admin-input-map-btn"
+                      disabled={coverUploading}
+                      onClick={() => coverFileInputRef.current?.click()}
+                      title="Select cover photo from device to instantly upload to cloud"
+                    >
+                      {coverUploading ? `${coverUploadProgress}%` : '☁️ Upload'}
+                    </button>
+                  </div>
+
+                  {coverUploading && (
+                    <div className="admin-cover-upload__progress">
+                      <div
+                        className="admin-cover-upload__progress-bar"
+                        style={{ width: `${coverUploadProgress}%` }}
+                      />
+                    </div>
+                  )}
+
+                  <span className="admin-cover-upload__hint">
+                    Drag &amp; drop a cover photo here or click <strong>Upload</strong> — it will
+                    instantly upload to the cloud and load the URL automatically.
+                  </span>
+                </div>
+
+                {formData.cover_image && (
+                  <div className="admin-cover-upload__preview">
+                    <img
+                      src={formData.cover_image}
+                      alt="Event cover preview"
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none'
+                      }}
+                      onLoad={(e) => {
+                        e.currentTarget.style.display = 'block'
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
               {renderFieldError('cover_image')}
             </div>
 

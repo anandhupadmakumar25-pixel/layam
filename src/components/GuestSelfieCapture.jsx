@@ -52,6 +52,7 @@ function GuestSelfieCapture({
     Boolean(navigator.mediaDevices?.getUserMedia)
 
   const [captureMode, setCaptureMode] = useState('camera') // 'camera' | 'upload'
+  const [facingMode, setFacingMode] = useState('user') // 'user' (Front) | 'environment' (Back)
   const [cameraReady, setCameraReady] = useState(false)
   const [cameraStarting, setCameraStarting] = useState(false)
   const [cameraError, setCameraError] = useState('')
@@ -93,59 +94,83 @@ function GuestSelfieCapture({
   }, [])
 
   // Request camera stream (called via explicit user tap or mount in secure contexts)
-  const startCameraStream = useCallback(async () => {
-    setCameraError('')
-    setValidationError('')
+  const startCameraStream = useCallback(
+    async (requestedFacingMode) => {
+      const activeFacing =
+        requestedFacingMode === 'environment' || requestedFacingMode === 'user'
+          ? requestedFacingMode
+          : facingMode
 
-    if (
-      typeof navigator === 'undefined' ||
-      !navigator.mediaDevices ||
-      typeof navigator.mediaDevices.getUserMedia !== 'function'
-    ) {
-      setCameraError(
-        'Direct live streaming is restricted by Safari on local HTTP. Tap "Open Safari Camera" below to take your selfie.'
-      )
-      return
-    }
+      setCameraError('')
+      setValidationError('')
 
-    stopCameraStream()
-    setCameraStarting(true)
-
-    try {
-      const mediaStream = await navigator.mediaDevices.getUserMedia({
-        video: {
-          facingMode: 'user',
-          width: { ideal: 1080 },
-          height: { ideal: 1080 },
-        },
-        audio: false,
-      })
-
-      streamRef.current = mediaStream
-      if (videoRef.current) {
-        videoRef.current.srcObject = mediaStream
-        await videoRef.current.play().catch(() => {})
+      if (
+        typeof navigator === 'undefined' ||
+        !navigator.mediaDevices ||
+        typeof navigator.mediaDevices.getUserMedia !== 'function'
+      ) {
+        setCameraError(
+          'Direct live streaming is restricted by Safari on local HTTP. Tap "Open Safari Camera" below to take your selfie.'
+        )
+        return
       }
-      setCameraReady(true)
-    } catch (err) {
-      const errName = err?.name || ''
-      if (errName === 'NotAllowedError' || errName === 'PermissionDeniedError') {
-        setCameraError(
-          'Safari camera permission was not granted. Tap "Open Safari Camera" below, or tap the "aA" icon in the address bar > Website Settings > Camera: Allow.'
-        )
-      } else if (errName === 'NotFoundError' || errName === 'DevicesNotFoundError') {
-        setCameraError(
-          'No camera was found on this device. Please upload a clear selfie photograph below.'
-        )
-      } else {
-        setCameraError(
-          'Live camera is unavailable on this connection. Tap "Open Safari Camera" below to snap your photo.'
-        )
+
+      stopCameraStream()
+      setCameraStarting(true)
+
+      try {
+        let mediaStream
+        try {
+          mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: {
+              facingMode: { ideal: activeFacing },
+              width: { ideal: 1080 },
+              height: { ideal: 1080 },
+            },
+            audio: false,
+          })
+        } catch {
+          mediaStream = await navigator.mediaDevices.getUserMedia({
+            video: { facingMode: activeFacing },
+            audio: false,
+          })
+        }
+
+        streamRef.current = mediaStream
+        if (videoRef.current) {
+          videoRef.current.srcObject = mediaStream
+          await videoRef.current.play().catch(() => {})
+        }
+        setCameraReady(true)
+      } catch (err) {
+        const errName = err?.name || ''
+        if (errName === 'NotAllowedError' || errName === 'PermissionDeniedError') {
+          setCameraError(
+            'Camera permission was not granted. Tap "Take Photo with Camera" below, or allow Camera access in your browser settings.'
+          )
+        } else if (errName === 'NotFoundError' || errName === 'DevicesNotFoundError') {
+          setCameraError(
+            'No camera was found on this device. Please upload a clear selfie photograph below.'
+          )
+        } else {
+          setCameraError(
+            'Live camera is unavailable on this connection. Tap "Take Photo with Camera" below to snap your photo.'
+          )
+        }
+      } finally {
+        setCameraStarting(false)
       }
-    } finally {
-      setCameraStarting(false)
+    },
+    [facingMode, stopCameraStream]
+  )
+
+  const handleToggleFacingMode = () => {
+    const nextFacing = facingMode === 'user' ? 'environment' : 'user'
+    setFacingMode(nextFacing)
+    if (captureMode === 'camera' && !capturedFile && hasMediaDevices) {
+      startCameraStream(nextFacing)
     }
-  }, [stopCameraStream])
+  }
 
   // On secure contexts, attempt auto-starting camera; on non-secure Safari, wait for user gesture or direct shutter
   useEffect(() => {
@@ -230,6 +255,9 @@ function GuestSelfieCapture({
         const objectUrl = window.URL.createObjectURL(selfieFile)
         setCapturedFile(selfieFile)
         setPreviewObjectUrl(objectUrl)
+        if (typeof window !== 'undefined') {
+          window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+        }
       },
       'image/jpeg',
       0.92
@@ -256,6 +284,9 @@ function GuestSelfieCapture({
     setValidationError('')
     setCapturedFile(file)
     setPreviewObjectUrl(objectUrl)
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })
+    }
   }
 
   const handleRetake = () => {
@@ -280,14 +311,22 @@ function GuestSelfieCapture({
 
   return (
     <div className="guest-selfie-capture fade-up">
-      <div className="guest-selfie-capture__header">
+      <div
+        className={`guest-selfie-capture__header ${
+          capturedFile ? 'guest-selfie-capture__header--compact' : ''
+        }`}
+      >
         <span className="section-eyebrow">Step 2 of 3 &bull; Reference Selfie</span>
-        <h2 className="guest-selfie-capture__title">Capture Your Reference Selfie</h2>
-        <p className="guest-selfie-capture__subtitle">
-          Look directly at the camera in clear lighting with only your face in the frame. Your
-          selfie is analyzed in memory for <strong>{eventName}</strong> and discarded immediately
-          after matching.
-        </p>
+        <h2 className="guest-selfie-capture__title">
+          {capturedFile ? 'Review Your Selfie' : 'Capture Your Reference Selfie'}
+        </h2>
+        {!capturedFile && (
+          <p className="guest-selfie-capture__subtitle">
+            Look directly at the camera in clear lighting with only your face in the frame. Your
+            selfie is analyzed in memory for <strong>{eventName}</strong> and discarded immediately
+            after matching.
+          </p>
+        )}
       </div>
 
       {/* Mode Switcher */}
@@ -328,7 +367,7 @@ function GuestSelfieCapture({
         id="guest-native-camera-input"
         type="file"
         accept="image/*"
-        capture="user"
+        capture={facingMode}
         onChange={handleFileInputChange}
         style={{ display: 'none' }}
       />
@@ -336,7 +375,7 @@ function GuestSelfieCapture({
       {/* 1. Captured Preview State */}
       {capturedFile && previewObjectUrl ? (
         <form onSubmit={handleSubmit} className="guest-selfie-capture__preview-panel">
-          <div className="guest-selfie-capture__viewport">
+          <div className="guest-selfie-capture__viewport guest-selfie-capture__viewport--preview">
             <img
               src={previewObjectUrl}
               alt="Captured guest selfie preview"
@@ -346,10 +385,17 @@ function GuestSelfieCapture({
           </div>
 
           <p className="guest-selfie-capture__privacy-note">
-            Nothing is uploaded until you click <strong>Find My Photographs</strong> below.
+            Nothing is uploaded until you tap <strong>Find My Photographs</strong> below.
           </p>
 
-          <div className="guest-selfie-capture__actions">
+          <div className="guest-selfie-capture__actions guest-selfie-capture__actions--preview">
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={isSubmitting}
+            >
+              {isSubmitting ? 'Finding Your Photographs...' : 'Find My Photographs'}
+            </button>
             <button
               type="button"
               className="btn btn-outline"
@@ -358,18 +404,28 @@ function GuestSelfieCapture({
             >
               Retake Selfie
             </button>
-            <button
-              type="submit"
-              className="btn btn-primary"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Finding Your Photographs...' : 'Find My Photographs'}
-            </button>
           </div>
         </form>
       ) : captureMode === 'camera' ? (
         /* 2. Live Camera Preview State */
         <div className="guest-selfie-capture__camera-panel">
+          <div className="guest-selfie-capture__camera-topbar">
+            <span className="guest-selfie-capture__camera-lens-label">
+              Active Lens: <strong>{facingMode === 'user' ? 'Front Camera' : 'Back Camera'}</strong>
+            </span>
+            <button
+              type="button"
+              className="guest-selfie-capture__switch-cam-btn"
+              onClick={handleToggleFacingMode}
+              disabled={cameraStarting || isSubmitting}
+              aria-label={
+                facingMode === 'user' ? 'Switch to Back Camera' : 'Switch to Front Camera'
+              }
+            >
+              🔄 {facingMode === 'user' ? 'Switch to Back Camera' : 'Switch to Front Camera'}
+            </button>
+          </div>
+
           <div className="guest-selfie-capture__viewport">
             <video
               ref={videoRef}
@@ -377,36 +433,56 @@ function GuestSelfieCapture({
               playsInline
               webkit-playsinline="true"
               muted
-              className="guest-selfie-capture__video"
+              className={`guest-selfie-capture__video ${
+                facingMode === 'user' ? 'guest-selfie-capture__video--mirrored' : ''
+              }`}
               style={{ display: cameraReady ? 'block' : 'none' }}
             />
             <div className="guest-selfie-capture__oval-guide" aria-hidden="true" />
+            {cameraReady && (
+              <button
+                type="button"
+                className="guest-selfie-capture__floating-flip-btn"
+                onClick={handleToggleFacingMode}
+                disabled={cameraStarting}
+                title={facingMode === 'user' ? 'Switch to Back Camera' : 'Switch to Front Camera'}
+              >
+                🔄 {facingMode === 'user' ? 'Back Cam' : 'Front Cam'}
+              </button>
+            )}
             {cameraStarting ? (
               <div className="guest-selfie-capture__overlay-msg">
-                Requesting camera permission...
+                Starting {facingMode === 'user' ? 'Front' : 'Back'} Camera...
               </div>
             ) : !cameraReady ? (
               <div className="guest-selfie-capture__standby-prompt">
                 <span className="guest-selfie-capture__standby-icon">📷</span>
-                <strong>Camera Access</strong>
-                <p>Allow camera access or take a selfie directly</p>
+                <strong>Camera Access ({facingMode === 'user' ? 'Front' : 'Back'})</strong>
+                <p>Allow camera access or take a photo directly</p>
                 <div className="guest-selfie-capture__standby-btns">
                   <button
                     type="button"
                     className="btn btn-primary btn-sm"
                     onClick={handleOpenNativeCamera}
                   >
-                    📸 Open Camera (Selfie)
+                    📸 Open {facingMode === 'user' ? 'Front' : 'Back'} Camera
                   </button>
                   {hasMediaDevices && (
                     <button
                       type="button"
                       className="btn btn-outline btn-sm"
-                      onClick={startCameraStream}
+                      onClick={() => startCameraStream(facingMode)}
                     >
                       Allow Live Preview
                     </button>
                   )}
+                  <button
+                    type="button"
+                    className="btn btn-outline btn-sm"
+                    onClick={handleToggleFacingMode}
+                  >
+                    🔄 Use {facingMode === 'user' ? 'Back' : 'Front'} Camera
+                  </button>
                 </div>
               </div>
             ) : null}
@@ -443,13 +519,21 @@ function GuestSelfieCapture({
                 Back
               </button>
             )}
+            <button
+              type="button"
+              className="btn btn-outline"
+              onClick={handleToggleFacingMode}
+              disabled={cameraStarting}
+            >
+              🔄 {facingMode === 'user' ? 'Back Camera' : 'Front Camera'}
+            </button>
             {cameraReady ? (
               <button
                 type="button"
                 className="btn btn-primary"
                 onClick={handleCaptureFrame}
               >
-                Capture Selfie
+                Capture Photo
               </button>
             ) : (
               <button
@@ -457,7 +541,7 @@ function GuestSelfieCapture({
                 className="btn btn-primary"
                 onClick={handleOpenNativeCamera}
               >
-                📸 Take Selfie with Camera
+                📸 Take Photo with Camera
               </button>
             )}
           </div>

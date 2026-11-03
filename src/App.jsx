@@ -1,4 +1,4 @@
-import { Routes, Route, Outlet } from 'react-router-dom'
+import { Routes, Route, Outlet, useLocation } from 'react-router-dom'
 import { AuthProvider } from './hooks/useAuth.jsx'
 import Navbar from './components/Navbar.jsx'
 import Footer from './components/Footer.jsx'
@@ -13,13 +13,16 @@ import AdminRoutes from './admin/AdminRoutes.jsx'
 import './App.css'
 
 function PublicLayout() {
+  const { pathname } = useLocation()
+  const isGuestPortal = pathname.startsWith('/guest/')
+
   return (
     <div className="app-shell">
       <Navbar />
       <main className="main-content">
         <Outlet />
       </main>
-      <Footer />
+      {!isGuestPortal && <Footer />}
     </div>
   )
 }

@@ -58,12 +58,68 @@
   text-align: center;
 }
 
+/* Camera Topbar & Switch Camera Controls */
+.guest-selfie-capture__camera-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  max-width: 360px;
+  margin: 0 auto 0.65rem;
+  padding: 0.45rem 0.75rem;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+}
+
+.guest-selfie-capture__camera-lens-label {
+  font-size: 0.76rem;
+  color: var(--text-secondary);
+}
+
+.guest-selfie-capture__camera-lens-label strong {
+  color: var(--text-primary);
+}
+
+.guest-selfie-capture__switch-cam-btn {
+  padding: 0.36rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  background-color: var(--text-primary);
+  color: #ffffff;
+  border: 1px solid var(--text-primary);
+  cursor: pointer;
+  transition: var(--transition-smooth);
+}
+
+.guest-selfie-capture__switch-cam-btn:hover:not(:disabled) {
+  background-color: var(--gold-dark);
+  border-color: var(--gold-dark);
+}
+
+.guest-selfie-capture__floating-flip-btn {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  z-index: 4;
+  padding: 0.4rem 0.75rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  background-color: rgba(17, 17, 17, 0.85);
+  color: var(--gold-light);
+  border: 1px solid var(--border-gold);
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+
 /* Camera & Preview Viewport */
 .guest-selfie-capture__viewport {
   position: relative;
   width: 100%;
-  max-width: 420px;
-  aspect-ratio: 1 / 1;
+  max-width: 360px;
+  height: 320px;
+  max-height: 320px;
   margin: 0 auto;
   background-color: #111111;
   border: 1px solid var(--border-gold);
@@ -73,16 +129,29 @@
   justify-content: center;
 }
 
-.guest-selfie-capture__video,
-.guest-selfie-capture__preview-img {
+.guest-selfie-capture__viewport--preview {
+  height: 280px;
+  max-height: 280px;
+}
+
+.guest-selfie-capture__video {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
 }
 
-.guest-selfie-capture__video {
+.guest-selfie-capture__video--mirrored {
   transform: scaleX(-1);
+}
+
+.guest-selfie-capture__preview-img {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
 .guest-selfie-capture__oval-guide {
@@ -282,9 +351,49 @@
 }
 
 
+@media (max-width: 640px) {
+  .guest-selfie-capture {
+    gap: 1rem;
+  }
+
+  .guest-selfie-capture__header--compact .guest-selfie-capture__title {
+    font-size: 1.35rem;
+    margin: 0.25rem 0;
+  }
+
+  .guest-selfie-capture__viewport {
+    max-width: 300px;
+    height: 250px;
+    max-height: 250px;
+  }
+
+  .guest-selfie-capture__viewport--preview {
+    max-width: 280px;
+    height: 220px;
+    max-height: 220px;
+  }
+
+  .guest-selfie-capture__privacy-note {
+    margin: 0.65rem 0 0.9rem;
+    font-size: 0.8rem;
+  }
+}
+
 @media (max-width: 480px) {
+  .guest-selfie-capture__viewport {
+    max-width: 280px;
+    height: 230px;
+    max-height: 230px;
+  }
+
+  .guest-selfie-capture__viewport--preview {
+    max-width: 260px;
+    height: 200px;
+    max-height: 200px;
+  }
+
   .guest-selfie-capture__dropzone {
-    padding: 2rem 1.25rem;
+    padding: 1.5rem 1.15rem;
   }
 
   .guest-selfie-capture__dropzone strong {
@@ -293,6 +402,7 @@
 
   .guest-selfie-capture__actions {
     flex-direction: column;
+    gap: 0.65rem;
   }
 
   .guest-selfie-capture__actions .btn {

@@ -14,10 +14,10 @@ export const SERVICES_DATA = [
       "Editorial storytelling with medium-format depth, capturing multi-day celebrations from sacred rituals to the grand reception.",
     fullDescription:
       "We approach every wedding as a timeless Vogue-caliber editorial commission. Blending unobtrusive photojournalism with poised fine-art cinematography, our team documents every sacred ritual, candid emotion, and grand celebration across India, UAE, and global destination venues.",
-    image: "/wedding/1.png",
+    image: "/wedding/6.png",
     gallery: [
-      "/wedding/1.png",
-      "/wedding/2.png",
+      "/wedding/6.png",
+      "/wedding/6.png",
     ],
     investment: "Custom Collection",
     turnaround: "48-Hour Preview · 3-Week Full Archive",
@@ -60,9 +60,9 @@ export const SERVICES_DATA = [
       "High-impact visual campaigns tailored for luxury fashion houses, haute couture, jewelry, and creative brands.",
     fullDescription:
       "We partner with visionary designers, luxury fashion labels, and creative houses to produce striking campaign visual libraries. From conceptual art direction and model casting to sculpted lighting, every asset is engineered for print lookbooks, hoardings, and premium digital media.",
-    image: "/Brand/1.png",
+    image: "/wedding/5.jpeg",
     gallery: [
-      "/Brand/1.png",
+      "/wedding/5.jpeg",
     ],
     investment: "Custom Collection",
     turnaround: "7-Day Master Asset Delivery",
@@ -103,14 +103,14 @@ export const SERVICES_DATA = [
       "Soulful maternity narratives and gentle newborn fine-art portraits celebrating motherhood and family beginnings.",
     fullDescription:
       "A harmonious celebration of motherhood and new life. From the radiant glow of pregnancy captured with sculpted lighting and couture draping to the tender, peaceful beginnings of your newborn baby, we preserve these sacred family milestones with museum-grade archival depth.",
-    image: "/Baby/1.JPG",
+    image: "/wedding/3.jpeg",
     gallery: [
-      "/Baby/1.JPG",
-      "/Baby/2.JPG",
-      "/Baby/3.JPG",
-      "/Baby/4.jpg",
-      "/Baby/5.jpg",
-      "/Baby/6.jpg",
+      "/wedding/3.jpeg",
+      // "/Baby/2.JPG",
+      // "/Baby/3.JPG",
+      // "/Baby/4.jpg",
+      // "/Baby/5.jpg",
+      // "/Baby/6.jpg",
     ],
     investment: "Custom Collection",
     turnaround: "5-Day Curated Delivery",

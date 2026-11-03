@@ -45,6 +45,18 @@ function GuestEntry() {
   const [matchError, setMatchError] = useState('')
   const [matchData, setMatchData] = useState(null)
 
+  // Always scroll to top on mount and whenever step / loading state changes so mobile users never land at the bottom/footer
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      if ('scrollRestoration' in window.history) {
+        window.history.scrollRestoration = 'manual'
+      }
+      window.scrollTo({ top: 0, left: 0, behavior: 'instant' })
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    }
+  }, [token, loading, step, errorState])
+
   useEffect(() => {
     let isMounted = true
 
@@ -259,7 +271,11 @@ function GuestEntry() {
         ) : (
           <div className="guest-entry-card fade-up">
             {/* Event Header Banner */}
-            <div className="guest-entry__header">
+            <div
+              className={`guest-entry__header ${
+                step === 'capture' || step === 'results' ? 'guest-entry__header--compact' : ''
+              }`}
+            >
               <span className="guest-entry__status-pill guest-entry__status-pill--valid">
                 Verified Event Guest Pass
               </span>

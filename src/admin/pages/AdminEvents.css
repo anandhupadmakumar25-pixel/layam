@@ -214,6 +214,106 @@
   border-color: var(--gold);
 }
 
+.admin-input-map-btn:disabled {
+  opacity: 0.65;
+  cursor: wait;
+}
+
+/* Cover Image Cloud Upload Zone */
+.admin-cover-upload-zone {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem;
+  background-color: var(--bg-secondary);
+  border: 1px dashed var(--border-light);
+  border-radius: 3px;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.admin-cover-upload-zone.is-dragover {
+  border-color: var(--gold);
+  background-color: rgba(197, 160, 89, 0.08);
+}
+
+.admin-cover-upload-zone.is-uploading {
+  border-color: var(--gold);
+}
+
+.admin-cover-upload-zone__controls {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.admin-cover-upload-zone__input-wrap input {
+  background-color: var(--bg-primary);
+  padding-right: 6.2rem;
+}
+
+.admin-cover-upload__progress {
+  width: 100%;
+  height: 5px;
+  background-color: rgba(197, 160, 89, 0.18);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.admin-cover-upload__progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--gold-dark), var(--gold));
+  transition: width 0.2s ease;
+}
+
+.admin-cover-upload__hint {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+.admin-cover-upload__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #15803d;
+  background-color: rgba(22, 163, 74, 0.1);
+  border: 1px solid rgba(22, 163, 74, 0.3);
+  border-radius: 2px;
+}
+
+.admin-cover-upload__preview {
+  width: 112px;
+  height: 76px;
+  flex-shrink: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  border: 1px solid var(--border-gold);
+  background-color: #0b0c10;
+}
+
+.admin-cover-upload__preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+@media (max-width: 640px) {
+  .admin-cover-upload-zone {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-cover-upload__preview {
+    width: 100%;
+    height: 150px;
+  }
+}
+
 .admin-form-field__error {
   font-size: 0.76rem;
   color: #b91c1c;

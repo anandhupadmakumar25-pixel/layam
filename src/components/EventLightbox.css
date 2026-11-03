@@ -87,16 +87,33 @@
 }
 
 .event-lightbox__item {
+  position: relative;
   aspect-ratio: 4 / 3;
   overflow: hidden;
-  background-color: var(--bg-tertiary);
+  background-color: #0b0c10;
   border-radius: 2px;
 }
 
+.event-lightbox__item::before {
+  content: "";
+  position: absolute;
+  inset: -10px;
+  background-image: var(--lightbox-bg);
+  background-size: cover;
+  background-position: center;
+  filter: blur(20px) brightness(0.42);
+  transform: scale(1.08);
+  z-index: 0;
+  pointer-events: none;
+}
+
 .event-lightbox__img {
+  position: relative;
+  z-index: 1;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  display: block;
 }
 
 @media (max-width: 768px) {

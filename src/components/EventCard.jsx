@@ -27,6 +27,7 @@ function EventCard({ event, onSelect }) {
           alt={displayName}
           className="event-card__img"
           loading="lazy"
+          decoding="async"
         />
         <div className="event-card__overlay">
           <div className="event-card__overlay-content">

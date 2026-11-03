@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { uploadEventPhotos } from '../../services/api.js'
 import './PhotoUploader.css'
 
-const MAX_MB = 15
+const MAX_MB = 50
 
 export function formatBytes(bytes) {
   if (!bytes || bytes <= 0) return '0 B'
@@ -144,7 +144,7 @@ function PhotoUploader({ eventId, eventName, onUploadComplete }) {
           <h3>Upload Photographs to {eventName || 'Selected Event'}</h3>
         </div>
         <span className="photo-uploader__spec">
-          Supported: JPG, JPEG, PNG, WebP &bull; Max {MAX_MB} MB / frame
+          Supported: JPG, JPEG, PNG, WebP &bull; Smart Auto-Compress (&lt;10 MB Archival Clarity)
         </span>
       </div>
 
@@ -175,8 +175,8 @@ function PhotoUploader({ eventId, eventName, onUploadComplete }) {
             Drag &amp; drop high-resolution photographs here
           </p>
           <p className="photo-uploader__sub">
-            Originals are archived intact while lightweight gallery thumbnails are generated
-            automatically.
+            Large camera files (24 MB+) are smart-compressed below 10 MB with archival clarity;
+            already-compressed photos are uploaded untouched.
           </p>
           <button
             type="button"

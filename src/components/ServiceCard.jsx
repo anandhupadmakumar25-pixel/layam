@@ -11,12 +11,16 @@ function ServiceCard({ service, detailed = false }) {
 
   return (
     <article className={`service-card ${detailed ? 'service-card--detailed' : ''}`}>
-      <div className="service-card__media">
+      <div
+        className="service-card__media"
+        style={{ '--service-bg': `url("${activeImg || service.image}")` }}
+      >
         <img
           src={activeImg || service.image}
           alt={service.title}
           className="service-card__img"
           loading="lazy"
+          decoding="async"
         />
         <span className="service-card__category">{service.category}</span>
       </div>
