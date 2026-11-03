@@ -591,3 +591,25 @@
   }
 }
 
+
+@media (max-width: 480px) {
+  .admin-qr__selector-card,
+  .admin-qr__directory-card,
+  .admin-qr-card {
+    padding: 1.25rem 0.95rem;
+  }
+
+  .admin-qr-modal__dialog {
+    max-width: 95vw;
+    padding: 1.25rem 0.95rem;
+  }
+
+  .admin-qr-modal__actions {
+    flex-direction: column;
+  }
+
+  .admin-qr-modal__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

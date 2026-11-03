@@ -244,3 +244,28 @@
   color: #b91c1c;
 }
 
+
+@media (max-width: 640px) {
+  .photo-uploader {
+    padding: 1.25rem 1rem;
+  }
+
+  .photo-uploader__dropzone {
+    padding: 1.75rem 1rem;
+  }
+
+  .photo-uploader__staging-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .photo-uploader__staging-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .photo-uploader__staging-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

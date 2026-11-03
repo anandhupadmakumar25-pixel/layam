@@ -1,42 +1,56 @@
 import './EventCard.css'
 
 function EventCard({ event, onSelect }) {
+  const displayName = event.coupleName || event.title
+
+  const handleClick = () => {
+    if (onSelect) onSelect(event)
+  }
+
   return (
-    <article className="event-card">
+    <article
+      className="event-card event-card--editorial"
+      onClick={handleClick}
+      tabIndex={0}
+      role="button"
+      aria-label={`View gallery for ${displayName}`}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault()
+          handleClick()
+        }
+      }}
+    >
       <div className="event-card__media">
         <img
           src={event.coverImage}
-          alt={event.title}
+          alt={displayName}
           className="event-card__img"
           loading="lazy"
         />
-        <div className="event-card__badges">
-          <span className="event-card__category">{event.category}</span>
-          <span className="event-card__count">{event.photoCount} Frames</span>
-        </div>
-      </div>
-
-      <div className="event-card__content">
-        <div className="event-card__meta">
-          <span>{event.date}</span>
-          <span className="event-card__sep">&bull;</span>
-          <span>{event.location}</span>
-        </div>
-
-        <h3 className="event-card__title">{event.title}</h3>
-        <p className="event-card__excerpt">{event.excerpt}</p>
-
-        <div className="event-card__footer">
-          <span className="event-card__smart-tag">Smart Gallery Enabled</span>
-          {onSelect && (
-            <button
-              type="button"
-              className="event-card__preview-btn"
-              onClick={() => onSelect(event)}
-            >
-              Preview Gallery &rarr;
-            </button>
-          )}
+        <div className="event-card__overlay">
+          <div className="event-card__overlay-content">
+            <span className="event-card__location">{event.location}</span>
+            <h3 className="event-card__name">{displayName}</h3>
+            {onSelect && (
+              <span className="event-card__preview-link">
+                <span>Preview Gallery</span>
+                <svg
+                  className="event-card__chevron"
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <polyline points="9 18 15 12 9 6" />
+                </svg>
+              </span>
+            )}
+          </div>
         </div>
       </div>
     </article>
@@ -44,4 +58,3 @@ function EventCard({ event, onSelect }) {
 }
 
 export default EventCard
-

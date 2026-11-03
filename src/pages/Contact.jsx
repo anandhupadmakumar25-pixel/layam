@@ -5,7 +5,7 @@ const INITIAL_FORM = {
   fullName: '',
   email: '',
   phone: '',
-  serviceType: 'Luxury Wedding',
+  serviceType: 'Wedding Shoots',
   eventDate: '',
   location: '',
   message: '',
@@ -36,10 +36,10 @@ function Contact() {
       <section className="contact-hero">
         <div className="container contact-hero__inner fade-up">
           <span className="contact-hero__eyebrow">Private Concierge</span>
-          <h1 className="contact-hero__title">Inquire &amp; Reserve</h1>
+          <h1 className="contact-hero__title">Enquire &amp; Reserve</h1>
           <p className="contact-hero__subtitle">
             Share the details of your upcoming celebration, portrait session, or brand commission.
-            Our senior producer responds to all inquiries within 24 hours.
+            Our team responds to all enquiries within 24 hours.
           </p>
         </div>
       </section>
@@ -51,36 +51,28 @@ function Contact() {
           <aside className="contact-info">
             <div className="contact-info__card">
               <span className="contact-info__eyebrow">Studio &amp; Office</span>
-              <h2>Layam Wedding Cinemas Studio</h2>
+              <h2>Layam Wedding Cinemas</h2>
               <p className="contact-info__lead">
-                Private consultations and print viewings are hosted by appointment at our SoHo
-                showroom or via private video salon.
+                Private consultations and portrait sessions are hosted by appointment at our studio or on location.
               </p>
 
               <div className="contact-info__list">
                 <div className="contact-info__item">
                   <span className="contact-info__label">Address</span>
-                  <p>482 Mercer Street, Suite 4B, New York, NY 10013</p>
+                  <p>Layam Studio Kolenchery , Kochi , Kerala.</p>
                 </div>
 
                 <div className="contact-info__item">
-                  <span className="contact-info__label">Concierge Email</span>
+                  <span className="contact-info__label">Email</span>
                   <p>
-                    <a href="mailto:concierge@layamweddingcinemas.com">concierge@layamweddingcinemas.com</a>
+                    <a href="mailto:layamstudiokolenchery@gmail.com">layamstudiokolenchery@gmail.com</a>
                   </p>
                 </div>
 
                 <div className="contact-info__item">
                   <span className="contact-info__label">Telephone</span>
                   <p>
-                    <a href="tel:+12125550194">+1 (212) 555-0194</a>
-                  </p>
-                </div>
-
-                <div className="contact-info__item">
-                  <span className="contact-info__label">Press &amp; Syndication</span>
-                  <p>
-                    <a href="mailto:press@layamweddingcinemas.com">press@layamweddingcinemas.com</a>
+                    <a href="tel:+919744860510">+91 9744860510</a>
                   </p>
                 </div>
               </div>
@@ -99,23 +91,23 @@ function Contact() {
           <div className="contact-form-wrap">
             {submitted ? (
               <div className="contact-confirmation">
-                <span className="contact-confirmation__badge">Inquiry Received</span>
+                <span className="contact-confirmation__badge">Enquiry Received</span>
                 <h2>Thank You, {formData.fullName}</h2>
                 <p>
-                  We have registered your inquiry for a <strong>{formData.serviceType}</strong>
-                  {formData.location ? ` in ${formData.location}` : ''}. Our senior producer will
+                  We have registered your enquiry for a <strong>{formData.serviceType}</strong>
+                  {formData.location ? ` in ${formData.location}` : ''}. Our team will
                   contact you at <strong>{formData.email}</strong> within one business day with our
-                  availability and bespoke dossier.
+                  availability and bespoke details.
                 </p>
                 <button type="button" className="btn btn-outline" onClick={handleReset}>
-                  Submit Another Inquiry
+                  Submit Another Enquiry
                 </button>
               </div>
             ) : (
               <form className="contact-form" onSubmit={handleSubmit}>
-                <h2 className="contact-form__title">Commission Dossier</h2>
+                <h2 className="contact-form__title">Get In Touch</h2>
                 <p className="contact-form__subtitle">
-                  Please complete the fields below so we may prepare a tailored proposal.
+                  Please complete the fields below so we may connect with you.
                 </p>
 
                 <div className="contact-form__row">
@@ -153,7 +145,7 @@ function Contact() {
                       id="phone"
                       name="phone"
                       type="tel"
-                      placeholder="+1 (555) 000-0000"
+                      placeholder="+91 9744860510"
                       value={formData.phone}
                       onChange={handleChange}
                     />
@@ -167,10 +159,11 @@ function Contact() {
                       value={formData.serviceType}
                       onChange={handleChange}
                     >
-                      <option value="Luxury Wedding">Luxury Wedding &amp; Destination Soirée</option>
-                      <option value="Editorial Portrait">Fine Art &amp; Executive Portraiture</option>
-                      <option value="Private Gala">Private Gala &amp; Cultural Summit</option>
-                      <option value="Brand Campaign">Luxury Brand &amp; Architectural Campaign</option>
+                      <option value="Wedding Shoots">Wedding Shoots</option>
+                      <option value="Engagement Shoots">Engagement Shoots</option>
+                      <option value="Brand Concept Shoots">Brand Concept Shoots</option>
+                      <option value="Corporate Events">Corporate Events</option>
+                      <option value="Moments & Celebrations">Moments &amp; Celebrations</option>
                     </select>
                   </div>
                 </div>
@@ -193,7 +186,7 @@ function Contact() {
                       id="location"
                       name="location"
                       type="text"
-                      placeholder="e.g. Lake Como, Italy / New York"
+                      placeholder="e.g. Kochi, Kerala"
                       value={formData.location}
                       onChange={handleChange}
                     />
@@ -214,7 +207,7 @@ function Contact() {
                 </div>
 
                 <button type="submit" className="btn btn-primary contact-form__submit">
-                  Send Private Inquiry
+                  Send Private Enquiry
                 </button>
               </form>
             )}
@@ -226,4 +219,3 @@ function Contact() {
 }
 
 export default Contact
-

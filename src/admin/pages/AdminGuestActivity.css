@@ -479,3 +479,23 @@
   }
 }
 
+
+@media (max-width: 480px) {
+  .admin-ga__header-card,
+  .admin-ga__panel {
+    padding: 1rem 0.85rem;
+  }
+
+  .admin-ga__filters-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-ga__header-actions {
+    width: 100%;
+  }
+
+  .admin-ga__header-actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

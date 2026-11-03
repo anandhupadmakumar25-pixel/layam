@@ -1,195 +1,299 @@
-.studio-footer {
-  background-color: var(--bg-secondary);
-  border-top: 1px solid var(--border-light);
-  padding: 5.5rem 0 2.5rem;
-  color: var(--text-primary);
+/* Minimalist Editorial Footer (Exact Match to Reference Design) */
+.minimal-footer {
+  background-color: #faf9f6;
+  border-top: 1px solid #ede8e1;
+  padding: 3.5rem 1.5rem 2.5rem;
+  color: #2b2b2b;
+  text-align: center;
+  position: relative;
+  width: 100%;
 }
 
-.studio-footer__grid {
-  display: grid;
-  grid-template-columns: 1.5fr 0.85fr 1.2fr 1.15fr;
-  gap: 3.5rem;
-  padding-bottom: 4rem;
-  border-bottom: 1px solid var(--border-light);
+.minimal-footer__container {
+  max-width: 900px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
-.studio-footer__logo {
+/* 1. Instagram Camera Outline Icon + Handle */
+.minimal-footer__instagram-top {
+  margin-bottom: 1.6rem;
+}
+
+.minimal-footer__ig-link {
   display: inline-flex;
-  margin-bottom: 1.25rem;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.65rem;
+  color: #1a1a1a;
+  text-decoration: none;
+  transition: transform 0.3s ease, color 0.3s ease;
 }
 
-.studio-footer__logo-img {
-  height: 52px;
-  max-width: 260px;
-  width: auto;
-  object-fit: contain;
+.minimal-footer__ig-link:hover {
+  transform: translateY(-2px);
+  color: #b89327;
+}
+
+.minimal-footer__ig-icon {
+  width: 24px;
+  height: 24px;
+  stroke: #2a2a2a;
+}
+
+.minimal-footer__handle {
+  font-family: var(--font-sans);
+  font-size: 0.74rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #2b2b2b;
+  word-break: break-word;
+}
+
+/* 2. Social Media Icons Row: Muted Slate Tone with Clean Spacing */
+.minimal-footer__socials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 1.55rem;
+  margin-bottom: 1.85rem;
+}
+
+.minimal-footer__social-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #6d7f85;
+  text-decoration: none;
+  padding: 4px;
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.minimal-footer__social-btn:hover {
+  transform: translateY(-2px);
+  color: #111111;
+}
+
+/* 3. Minimal Horizontal Navigation Links (Serif, Widely Tracked) */
+.minimal-footer__nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2.25rem;
+  margin-bottom: 1.65rem;
+}
+
+.minimal-footer__nav-link {
+  font-family: var(--font-serif);
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #383838;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  white-space: nowrap;
+}
+
+.minimal-footer__nav-link:hover {
+  color: #b89327;
+}
+
+/* 4. Copyright Notice (Serif, Muted Soft Gray) */
+.minimal-footer__copyright {
+  font-family: var(--font-serif);
+  font-size: 0.82rem;
+  color: #8c8c8c;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  margin: 0 0 1.85rem;
+  line-height: 1.5;
+}
+
+/* 5. Centered Scroll to Top Arrow Button (Hairline Slender Arrow with Flared Wings) */
+.minimal-footer__scroll-top-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.minimal-footer__scroll-top-btn {
+  background: none;
+  border: none;
+  padding: 0.35rem 1rem;
+  color: #8c8c8c;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s ease;
+  touch-action: manipulation;
+}
+
+.minimal-footer__scroll-top-btn:hover {
+  transform: translateY(-6px);
+  color: #111111;
+}
+
+.minimal-footer__scroll-top-btn svg {
   display: block;
 }
 
-.studio-footer__logo-title {
-  font-family: var(--font-serif);
-  font-size: 1.5rem;
-  font-weight: 600;
-  letter-spacing: 0.18em;
-  color: var(--text-primary);
-}
-
-.studio-footer__logo-sub {
-  font-size: 0.62rem;
-  letter-spacing: 0.24em;
-  color: var(--gold-dark);
-  font-weight: 600;
-  margin-top: 0.2rem;
-}
-
-.studio-footer__desc {
-  color: var(--text-secondary);
-  font-size: 0.94rem;
-  line-height: 1.75;
-  margin-bottom: 1.5rem;
-  max-width: 360px;
-}
-
-.studio-footer__luxury-tag {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  padding: 0.45rem 0.95rem;
-  background-color: rgba(197, 160, 89, 0.08);
-  border: 1px solid rgba(197, 160, 89, 0.25);
-  border-radius: 2px;
-  font-size: 0.76rem;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  color: var(--gold-dark);
-}
-
-.studio-footer__luxury-star {
-  color: var(--gold);
-  font-size: 0.85rem;
-}
-
-.studio-footer__portal-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  color: var(--gold-dark) !important;
-  font-weight: 600;
-  transition: all 0.25s ease;
-}
-
-.studio-footer__portal-link:hover {
-  color: var(--text-primary) !important;
-  transform: translateX(4px);
-}
-
-.studio-footer__heading {
-  font-family: var(--font-sans);
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--text-primary);
-  margin-bottom: 1.4rem;
-}
-
-.studio-footer__links,
-.studio-footer__contact {
-  list-style: none;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-}
-
-.studio-footer__links a {
-  font-size: 0.92rem;
-  color: var(--text-secondary);
-}
-
-.studio-footer__links a:hover {
-  color: var(--gold-dark);
-  padding-left: 4px;
-}
-
-.studio-footer__contact li {
-  display: flex;
-  flex-direction: column;
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-}
-
-.studio-footer__label {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  color: var(--gold-dark);
-  font-weight: 600;
-  margin-bottom: 0.15rem;
-}
-
-.studio-footer__contact a:hover {
-  color: var(--gold-dark);
-}
-
-.studio-footer__social-note {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
-  line-height: 1.65;
-  margin-bottom: 1.25rem;
-}
-
-.studio-footer__socials {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.studio-footer__social-pill {
-  padding: 0.45rem 0.95rem;
-  font-size: 0.75rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  border: 1px solid var(--border-light);
-  background-color: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-.studio-footer__social-pill:hover {
-  border-color: var(--gold);
-  background-color: var(--gold);
+/* 6. Floating WhatsApp Fixed Bottom Right Icon (Scrolls With Screen) */
+.floating-whatsapp {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  z-index: 999;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
   color: #ffffff;
-}
-
-.studio-footer__bottom {
-  padding-top: 2rem;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  font-size: 0.82rem;
-  color: var(--text-muted);
+  justify-content: center;
+  box-shadow: 0 8px 24px rgba(18, 140, 126, 0.38), 0 2px 6px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+  text-decoration: none;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease;
+  touch-action: manipulation;
 }
 
-@media (max-width: 1024px) {
-  .studio-footer__grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 2.5rem;
+.floating-whatsapp:hover {
+  transform: translateY(-4px) scale(1.08);
+  box-shadow: 0 12px 30px rgba(18, 140, 126, 0.5), 0 4px 10px rgba(0, 0, 0, 0.16);
+}
+
+.floating-whatsapp__pulse {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: inherit;
+  opacity: 0.6;
+  z-index: -1;
+  animation: wa-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes wa-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
   }
 }
 
-@media (max-width: 640px) {
-  .studio-footer {
-    padding: 4rem 0 2rem;
+.floating-whatsapp__icon {
+  width: 30px;
+  height: 30px;
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+}
+
+/* Tablet (<= 768px) */
+@media (max-width: 768px) {
+  .minimal-footer {
+    padding: 2.75rem 1.25rem 2rem;
   }
 
-  .studio-footer__grid {
-    grid-template-columns: 1fr;
-    gap: 2.25rem;
+  .minimal-footer__instagram-top {
+    margin-bottom: 1.35rem;
   }
 
-  .studio-footer__bottom {
-    flex-direction: column;
-    gap: 0.75rem;
-    text-align: center;
+  .minimal-footer__nav {
+    gap: 1.15rem 1.75rem;
+    margin-bottom: 1.35rem;
+  }
+
+  .minimal-footer__socials {
+    gap: 1.25rem;
+    margin-bottom: 1.45rem;
+  }
+
+  .minimal-footer__copyright {
+    margin-bottom: 1.5rem;
+  }
+
+  .floating-whatsapp {
+    bottom: 1.25rem;
+    right: 1.25rem;
+    width: 52px;
+    height: 52px;
+  }
+
+  .floating-whatsapp__icon {
+    width: 26px;
+    height: 26px;
   }
 }
 
+/* Mobile (<= 480px) */
+@media (max-width: 480px) {
+  .minimal-footer {
+    padding: 2.25rem 1rem 1.75rem;
+  }
+
+  .minimal-footer__handle {
+    font-size: 0.7rem;
+    letter-spacing: 0.18em;
+  }
+
+  .minimal-footer__nav {
+    gap: 0.85rem 1.25rem;
+  }
+
+  .minimal-footer__nav-link {
+    font-size: 0.72rem;
+    letter-spacing: 0.16em;
+  }
+
+  .minimal-footer__socials {
+    gap: 1.1rem;
+  }
+
+  .minimal-footer__copyright {
+    font-size: 0.75rem;
+  }
+
+  .floating-whatsapp {
+    bottom: 1rem;
+    right: 1rem;
+    width: 48px;
+    height: 48px;
+  }
+
+  .floating-whatsapp__icon {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* Very Small Screen (<= 360px) */
+@media (max-width: 360px) {
+  .minimal-footer__nav {
+    gap: 0.65rem 1rem;
+  }
+
+  .minimal-footer__nav-link {
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+  }
+
+  .minimal-footer__socials {
+    gap: 0.85rem;
+  }
+}

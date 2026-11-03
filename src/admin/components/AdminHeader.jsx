@@ -35,7 +35,6 @@ function AdminHeader({ pageTitle, onToggleSidebar }) {
         </Link>
 
         <div className="admin-header__title-group">
-          <span className="admin-header__brand-pill">LAYAM WEDDING CINEMAS</span>
           <h1 className="admin-header__title">{pageTitle}</h1>
         </div>
       </div>
@@ -93,11 +92,7 @@ function AdminHeader({ pageTitle, onToggleSidebar }) {
           <div className="admin-header__profile-meta">
             <span className="admin-header__profile-name">{displayName}</span>
             <span className="admin-header__profile-role">
-              <span className={`admin-header__role-badge ${isSuperAdmin ? 'is-super' : 'is-admin'}`}>
-                {isSuperAdmin ? 'Super Admin' : 'Admin'}
-              </span>
-              <span className="admin-header__role-sep">&bull;</span>
-              <span className="admin-header__role-email">{user?.email || 'Administrator'}</span>
+              {isSuperAdmin ? 'SUPER ADMIN' : 'ADMIN'}
             </span>
           </div>
         </div>

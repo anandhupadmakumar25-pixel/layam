@@ -20,6 +20,20 @@
   margin: 0 auto;
 }
 
+.admin-footer {
+  padding: 1.5rem 2rem;
+  border-top: 1px solid var(--border-light);
+  background-color: var(--bg-primary);
+  text-align: center;
+}
+
+.admin-footer p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin: 0;
+}
+
 .admin-auth-loading {
   min-height: 100vh;
   display: flex;
@@ -45,9 +59,95 @@
   margin-bottom: 0.5rem;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .admin-shell__content {
-    padding: 1.25rem;
+    padding: 1.5rem 1.25rem;
   }
 }
 
+@media (max-width: 768px) {
+  .admin-shell__content {
+    padding: 1.25rem 1rem;
+  }
+
+  .admin-footer {
+    padding: 1.25rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-shell__content {
+    padding: 1rem 0.75rem;
+  }
+
+  .admin-footer {
+    padding: 1rem 0.75rem;
+  }
+
+  .admin-footer p {
+    font-size: 0.72rem;
+  }
+
+  .admin-auth-loading__box {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .admin-shell__content {
+    padding: 0.85rem 0.5rem;
+  }
+}
+
+
+/* Global Admin Action Button Defaults */
+.admin-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.8rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1;
+  background-color: var(--bg-primary);
+  border: 1px solid var(--border-light);
+  color: var(--text-primary);
+  cursor: pointer;
+  border-radius: 2px;
+  transition: var(--transition-smooth);
+}
+
+.admin-action-btn:hover {
+  border-color: var(--text-primary);
+  background-color: var(--text-primary);
+  color: #ffffff;
+}
+
+.admin-action-btn--gold {
+  border-color: rgba(201, 169, 110, 0.45);
+  background-color: #faf8f5;
+  color: var(--text-primary);
+}
+
+.admin-action-btn--gold:hover {
+  border-color: var(--gold);
+  background-color: var(--gold);
+  color: #ffffff;
+}
+
+.admin-action-btn--danger {
+  color: #b91c1c;
+  border-color: rgba(185, 28, 28, 0.25);
+}
+
+.admin-action-btn--danger:hover {
+  border-color: #b91c1c;
+  background-color: #b91c1c;
+  color: #ffffff;
+}

@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom'
 import SectionHeader from '../components/SectionHeader.jsx'
 import ServiceCard from '../components/ServiceCard.jsx'
-import { SERVICES_DATA, SERVICE_FAQS } from '../data/studioData.js'
+import { SERVICES_DATA } from '../data/studioData.js'
 import './Services.css'
 
 const BESPOKE_TIERS = [
@@ -76,8 +76,8 @@ function Services() {
         </div>
       </section>
 
-      {/* Investment Tiers */}
-      <section className="services-tiers">
+      {/* Investment Tiers / Packages */}
+      <section className="services-tiers" id="packages">
         <div className="container">
           <SectionHeader
             eyebrow="Investment Guide"
@@ -104,28 +104,8 @@ function Services() {
                   to="/contact"
                   className={`btn ${tier.featured ? 'btn-gold' : 'btn-outline'} tier-card__btn`}
                 >
-                  Request Bespoke Proposal
+                  Let's Connect
                 </Link>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="services-faq">
-        <div className="container">
-          <SectionHeader
-            eyebrow="Client Concierge"
-            title="Frequently Asked Questions"
-            subtitle="Details regarding international travel, turnaround schedules, and guest privacy."
-          />
-
-          <div className="services-faq__grid">
-            {SERVICE_FAQS.map((item) => (
-              <div key={item.question} className="faq-item">
-                <h3 className="faq-item__question">{item.question}</h3>
-                <p className="faq-item__answer">{item.answer}</p>
               </div>
             ))}
           </div>
@@ -136,4 +116,3 @@ function Services() {
 }
 
 export default Services
-

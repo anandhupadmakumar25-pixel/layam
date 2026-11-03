@@ -34,10 +34,12 @@ function AdminLayout() {
         <main className="admin-shell__content">
           <Outlet />
         </main>
+        <footer className="admin-footer">
+          <p>All content Copyright &copy; 2026 Layam Wedding Cinemas.</p>
+        </footer>
       </div>
     </div>
   )
 }
 
 export default AdminLayout
-

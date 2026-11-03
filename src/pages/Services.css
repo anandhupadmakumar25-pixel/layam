@@ -1,3 +1,7 @@
+.services-page {
+  width: 100%;
+}
+
 .services-hero {
   background-color: var(--bg-secondary);
   border-bottom: 1px solid var(--border-light);
@@ -20,8 +24,9 @@
 }
 
 .services-hero__title {
-  font-size: clamp(2.5rem, 4.5vw, 3.75rem);
+  font-size: clamp(2.35rem, 4.5vw, 3.75rem);
   margin-bottom: 1.25rem;
+  line-height: 1.15;
 }
 
 .services-hero__subtitle {
@@ -64,6 +69,7 @@
   flex-direction: column;
   position: relative;
   transition: var(--transition-smooth);
+  border-radius: 2px;
 }
 
 .tier-card--featured {
@@ -82,6 +88,7 @@
   letter-spacing: 0.16em;
   text-transform: uppercase;
   padding: 0.3rem 0.85rem;
+  border-radius: 2px;
 }
 
 .tier-card__name {
@@ -103,6 +110,7 @@
   padding-bottom: 1.5rem;
   margin-bottom: 1.5rem;
   border-bottom: 1px solid var(--border-light);
+  line-height: 1.5;
 }
 
 .tier-card__list {
@@ -119,6 +127,7 @@
   color: var(--text-secondary);
   padding-left: 1.25rem;
   position: relative;
+  line-height: 1.5;
 }
 
 .tier-card__list li::before {
@@ -133,40 +142,73 @@
   width: 100%;
 }
 
-/* FAQ */
-.services-faq {
-  padding: 6.5rem 0;
-  background-color: var(--bg-primary);
+/* Tablet (769px - 1024px) */
+@media (max-width: 1024px) {
+  .services-hero {
+    padding: 4.5rem 0 3.5rem;
+  }
+
+  .services-catalog,
+  .services-tiers {
+    padding: 4.5rem 0;
+  }
+
+  .services-tiers__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
-.services-faq__grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-}
-
-.faq-item {
-  padding: 2rem;
-  border: 1px solid var(--border-light);
-  background-color: var(--bg-secondary);
-}
-
-.faq-item__question {
-  font-size: 1.35rem;
-  margin-bottom: 0.65rem;
-}
-
-.faq-item__answer {
-  font-size: 0.94rem;
-  color: var(--text-secondary);
-  line-height: 1.7;
-}
-
+/* Mobile & Small Tablet (<= 992px) */
 @media (max-width: 992px) {
-  .services-catalog__grid,
-  .services-tiers__grid,
-  .services-faq__grid {
+  .services-catalog__grid {
     grid-template-columns: 1fr;
   }
 }
 
+/* Mobile (<= 768px) */
+@media (max-width: 768px) {
+  .services-hero {
+    padding: 3.5rem 0 2.5rem;
+  }
+
+  .services-catalog,
+  .services-tiers {
+    padding: 3.25rem 0;
+  }
+
+  .services-tiers__grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .tier-card {
+    padding: 2.25rem 1.65rem;
+  }
+
+  .tier-card__badge {
+    left: 1.5rem;
+  }
+}
+
+/* Small Mobile (<= 480px) */
+@media (max-width: 480px) {
+  .services-hero__title {
+    font-size: clamp(1.85rem, 6.5vw, 2.35rem);
+  }
+
+  .services-hero__subtitle {
+    font-size: 0.95rem;
+  }
+
+  .tier-card {
+    padding: 1.85rem 1.25rem;
+  }
+
+  .tier-card__price {
+    font-size: 2rem;
+  }
+
+  .tier-card__name {
+    font-size: 1.4rem;
+  }
+}

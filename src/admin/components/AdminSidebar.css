@@ -197,6 +197,7 @@
     top: 0;
     bottom: 0;
     transform: translateX(-100%);
+    box-shadow: none;
   }
 
   .admin-sidebar.is-open {
@@ -204,46 +205,33 @@
     box-shadow: var(--shadow-elevated);
   }
 
-  .admin-sidebar__warning-box {
-  padding: 0.75rem 1.25rem;
-  background: #fffbeb;
-  border-bottom: 1px solid #fde68a;
-}
-
-.admin-sidebar__warning-link {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 0.72rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #b45309;
-  text-decoration: none;
-}
-
-.admin-sidebar__warning-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: #f59e0b;
-  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.3);
-  animation: pulse 2s infinite;
-}
-
-.admin-sidebar__sec-divider {
-  height: 1px;
-  background: var(--border-light);
-  margin: 1.5rem 0.75rem 1rem;
-}
-
-.admin-sidebar__backdrop {
+  .admin-sidebar__backdrop {
     display: block;
     position: fixed;
     inset: 0;
     background-color: rgba(17, 17, 17, 0.5);
     backdrop-filter: blur(3px);
     z-index: 85;
+  }
+}
+
+@media (max-width: 480px) {
+  .admin-sidebar {
+    width: 250px;
+  }
+
+  .admin-sidebar__brand {
+    height: 68px;
+    padding: 0 1.25rem;
+  }
+
+  .admin-sidebar__logo-img {
+    height: 32px;
+    max-width: 160px;
+  }
+
+  .admin-sidebar__nav {
+    padding: 1.5rem 0.85rem;
   }
 }
 

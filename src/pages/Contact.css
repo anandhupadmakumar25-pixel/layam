@@ -153,12 +153,14 @@
 .contact-form__field select,
 .contact-form__field textarea {
   font-family: var(--font-sans);
-  font-size: 0.95rem;
+  font-size: 1rem;
   padding: 0.85rem 1rem;
   border: 1px solid var(--border-light);
   background-color: var(--bg-secondary);
   color: var(--text-primary);
   transition: var(--transition-smooth);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .contact-form__field input:focus,
@@ -172,6 +174,10 @@
 .contact-form__submit {
   width: 100%;
   margin-top: 0.5rem;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .contact-confirmation {
@@ -205,6 +211,17 @@
 @media (max-width: 992px) {
   .contact-section__grid {
     grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .contact-hero {
+    padding: 4.5rem 0 3.25rem;
+  }
+
+  .contact-section {
+    padding: 3.5rem 0;
   }
 }
 
@@ -220,3 +237,33 @@
   }
 }
 
+@media (max-width: 480px) {
+  .contact-hero {
+    padding: 3rem 0 2rem;
+  }
+
+  .contact-section {
+    padding: 2.25rem 0;
+  }
+
+  .contact-form-wrap,
+  .contact-info__card {
+    padding: 1.25rem 1rem;
+  }
+
+  .contact-info__card h2,
+  .contact-form__title {
+    font-size: 1.55rem;
+  }
+
+  .contact-hero__subtitle {
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .contact-form-wrap,
+  .contact-info__card {
+    padding: 1rem 0.75rem;
+  }
+}

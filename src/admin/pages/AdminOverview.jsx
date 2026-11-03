@@ -71,18 +71,7 @@ function AdminOverview() {
 
   return (
     <div className="admin-overview">
-      {/* Data Source Notice Banner */}
-      <div className="admin-overview__notice">
-        <div>
-          <span className="admin-overview__notice-tag">Data Transparency</span>
-          <span>
-            <strong>Total Events</strong>, <strong>Total Photographs</strong>,{' '}
-            <strong>Active Galleries</strong>, <strong>Recent Events</strong>, and{' '}
-            <strong>Recently Uploaded Photographs</strong> are fetched live from the Django SQLite
-            API. Guest telemetry displays structured <em>Sample Previews</em> ahead of Phase 5.
-          </span>
-        </div>
-      </div>
+
 
       {error && <div className="admin-overview__error">{error}</div>}
 
@@ -91,25 +80,21 @@ function AdminOverview() {
         <StatCard
           label="Total Events"
           value={loading ? '...' : stats.total_events}
-          subtitle="Synchronized with Django Event model"
           source="live"
         />
         <StatCard
           label="Total Photographs"
           value={loading ? '...' : stats.total_photographs.toLocaleString()}
-          subtitle="Actual uploaded Photo rows in database"
           source="live"
         />
         <StatCard
           label="Active Galleries"
           value={loading ? '...' : stats.active_galleries}
-          subtitle="Events currently marked Active"
           source="live"
         />
         <StatCard
           label="Total Guest Accesses"
           value="3,480"
-          subtitle="Sample metric (Guest portal in Phase 5)"
           source="sample"
         />
       </section>
@@ -139,112 +124,110 @@ function AdminOverview() {
         </div>
       </section>
 
-      {/* 3. Main Split Grid: Recent Events (Live) & Recent Guest Activity (Sample) */}
-      <div className="admin-overview__split">
-        {/* Recent Events (Live Backend Data) */}
-        <section className="admin-panel">
-          <div className="admin-section-head">
-            <div>
-              <h2>Recent Events</h2>
-              <p>Latest records from Django REST API (`/api/events/stats/`)</p>
-            </div>
-            <span className="admin-badge admin-badge--live">Live Backend Data</span>
+      {/* 3. Recent Events (Live Backend Data) */}
+      <section className="admin-panel">
+        <div className="admin-section-head">
+          <div>
+            <h2>Recent Events</h2>
           </div>
+          <span className="admin-badge admin-badge--live">Live Backend Data</span>
+        </div>
 
-          {loading ? (
-            <p className="admin-panel__empty">Loading recent events from database...</p>
-          ) : stats.recent_events.length === 0 ? (
-            <p className="admin-panel__empty">
-              No events in database yet.{' '}
-              <Link to="/admin/events">Create your first event &rarr;</Link>
-            </p>
-          ) : (
-            <ul className="admin-recent-events">
-              {stats.recent_events.map((ev) => (
-                <li key={ev.id} className="admin-recent-events__item">
-                  <img
-                    src={ev.cover_image}
-                    alt={ev.name}
-                    className="admin-recent-events__thumb"
-                  />
-                  <div className="admin-recent-events__info">
-                    <strong>{ev.name}</strong>
-                    <span>
-                      {ev.event_date} &bull; {ev.location} &bull; {ev.category}
-                    </span>
-                  </div>
-                  <div className="admin-recent-events__meta">
-                    <span
-                      className={`admin-event-status status--${(
-                        ev.status || 'upcoming'
-                      ).toLowerCase()}`}
-                    >
-                      {ev.status}
-                    </span>
-                    <Link
-                      to={`/admin/gallery?event=${ev.id}`}
-                      style={{ fontSize: '0.72rem', color: 'var(--gold-dark)', fontWeight: 600 }}
-                    >
-                      {ev.photo_count} frames &rarr;
-                    </Link>
-                  </div>
-                </li>
-              ))}
-            </ul>
-          )}
-
-          <div className="admin-panel__footer">
-            {hasPermission('events') ? (
-              <Link to="/admin/events" className="admin-panel__link">
-                Open Full Event Manager &rarr;
-              </Link>
-            ) : (
-              <span style={{ fontSize: '0.8rem', color: '#999999' }}>Event Manager (Restricted)</span>
-            )}
-          </div>
-        </section>
-
-        {/* Recent Guest Activity (Sample Data) */}
-        <section className="admin-panel">
-          <div className="admin-section-head">
-            <div>
-              <h2>Recent Guest Activity</h2>
-              <p>Preview of guest QR scans and AI face-discovery sessions</p>
-            </div>
-            <span className="admin-badge admin-badge--sample">Sample Data</span>
-          </div>
-
-          <ul className="admin-activity-list">
-            {SAMPLE_GUEST_ACTIVITY.map((item) => (
-              <li key={item.id} className="admin-activity-list__item">
-                <div className="admin-activity-list__top">
-                  <strong>{item.guest}</strong>
-                  <time>{item.time}</time>
+        {loading ? (
+          <p className="admin-panel__empty">Loading recent events from database...</p>
+        ) : stats.recent_events.length === 0 ? (
+          <p className="admin-panel__empty">
+            No events in database yet.{' '}
+            <Link to="/admin/events">Create your first event &rarr;</Link>
+          </p>
+        ) : (
+          <ul className="admin-recent-events">
+            {stats.recent_events.map((ev) => (
+              <li key={ev.id} className="admin-recent-events__item">
+                <img
+                  src={ev.cover_image}
+                  alt={ev.name}
+                  className="admin-recent-events__thumb"
+                />
+                <div className="admin-recent-events__info">
+                  <strong>{ev.name}</strong>
+                  <span>
+                    {ev.event_date} &bull; {ev.location} &bull; {ev.category}
+                  </span>
                 </div>
-                <p>{item.action}</p>
-                <span className="admin-activity-list__event">{item.event}</span>
+                <div className="admin-recent-events__meta">
+                  <span
+                    className={`admin-event-status status--${(
+                      ev.status || 'upcoming'
+                    ).toLowerCase()}`}
+                  >
+                    {ev.status}
+                  </span>
+                  <Link
+                    to={`/admin/gallery?event=${ev.id}`}
+                    style={{ fontSize: '0.72rem', color: 'var(--gold-dark)', fontWeight: 600 }}
+                  >
+                    {ev.photo_count} frames &rarr;
+                  </Link>
+                </div>
               </li>
             ))}
           </ul>
+        )}
 
-          <div className="admin-panel__footer">
-            {hasPermission('guest_activity') ? (
-              <Link to="/admin/guest-activity" className="admin-panel__link">
-                View Guest Telemetry Module &rarr;
-              </Link>
-            ) : (
-              <span style={{ fontSize: '0.8rem', color: '#999999' }}>Guest Telemetry (Restricted)</span>
-            )}
+        <div className="admin-panel__footer">
+          {hasPermission('events') ? (
+            <Link to="/admin/events" className="admin-panel__link">
+              Open Full Event Manager &rarr;
+            </Link>
+          ) : (
+            <span style={{ fontSize: '0.8rem', color: '#999999' }}>Event Manager (Restricted)</span>
+          )}
+        </div>
+      </section>
+
+      {/* Hidden: Recent Guest Activity (Can be re-enabled later if needed)
+      <section className="admin-panel">
+        <div className="admin-section-head">
+          <div>
+            <h2>Recent Guest Activity</h2>
+            <p>Preview of guest QR scans and AI face-discovery sessions</p>
           </div>
-        </section>
-      </div>
+          <span className="admin-badge">Sample Preview</span>
+        </div>
+
+        <ul className="admin-guest-activity">
+          {SAMPLE_GUEST_ACTIVITY.map((act) => (
+            <li key={act.id} className="admin-guest-activity__item">
+              <span className="admin-guest-activity__dot" />
+              <div className="admin-guest-activity__body">
+                <strong>{act.guest}</strong>
+                <p>{act.action}</p>
+                <small>
+                  {act.event} &bull; {act.time}
+                </small>
+              </div>
+            </li>
+          ))}
+        </ul>
+
+        <div className="admin-panel__footer">
+          {hasPermission('events') ? (
+            <Link to="/admin/guest-activity" className="admin-panel__link">
+              View Guest Telemetry Module &rarr;
+            </Link>
+          ) : (
+            <span style={{ fontSize: '0.8rem', color: '#999999' }}>Guest Telemetry (Restricted)</span>
+          )}
+        </div>
+      </section>
+      */}
 
       {/* 4. Recently Uploaded Photographs (Live Backend Data) */}
       <section className="admin-panel">
         <div className="admin-section-head">
           <div>
             <h2>Recently Uploaded Photographs</h2>
-            <p>Latest frames ingested into the Django `Photo` model and media storage</p>
           </div>
           <span className="admin-badge admin-badge--live">Live Backend Data</span>
         </div>

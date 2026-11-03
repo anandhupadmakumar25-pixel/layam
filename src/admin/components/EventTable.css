@@ -2,19 +2,21 @@
   background-color: var(--bg-primary);
   border: 1px solid var(--border-light);
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .admin-event-table {
   width: 100%;
+  min-width: 1140px;
   border-collapse: collapse;
   text-align: left;
 }
 
 .admin-event-table th {
-  padding: 1rem 1.25rem;
+  padding: 1rem 1.15rem;
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.16em;
+  letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--text-muted);
   background-color: var(--bg-secondary);
@@ -23,11 +25,42 @@
 }
 
 .admin-event-table td {
-  padding: 1.15rem 1.25rem;
+  padding: 1rem 1.15rem;
   border-bottom: 1px solid var(--border-light);
   font-size: 0.88rem;
   color: var(--text-secondary);
   vertical-align: middle;
+}
+
+.admin-event-table td[data-label="Event Name"] {
+  min-width: 220px;
+}
+
+.admin-event-table td[data-label="Date"] {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-primary);
+}
+
+.admin-event-table td[data-label="Location"] {
+  white-space: nowrap;
+}
+
+.admin-event-table td[data-label="Category"] {
+  white-space: nowrap;
+}
+
+.admin-event-table td[data-label="Photographs"] {
+  white-space: nowrap;
+}
+
+.admin-event-table td[data-label="Status"] {
+  white-space: nowrap;
+}
+
+.admin-event-table td[data-label="Actions"] {
+  white-space: nowrap;
+  width: 1%;
 }
 
 .admin-event-table tbody tr:last-child td {
@@ -45,11 +78,12 @@
 }
 
 .admin-event-table__thumb {
-  width: 52px;
+  width: 50px;
   height: 40px;
   object-fit: cover;
   border: 1px solid var(--border-light);
   flex-shrink: 0;
+  border-radius: 2px;
 }
 
 .admin-event-table__name {
@@ -57,32 +91,36 @@
   color: var(--text-primary);
   font-weight: 600;
   font-size: 0.92rem;
+  line-height: 1.35;
 }
 
 .admin-event-table__slug {
   display: block;
   font-size: 0.72rem;
   color: var(--text-muted);
+  margin-top: 0.15rem;
 }
 
 .admin-event-table__cat {
   display: inline-block;
-  padding: 0.22rem 0.6rem;
+  padding: 0.25rem 0.65rem;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
   font-size: 0.72rem;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--text-primary);
+  white-space: nowrap;
 }
 
 .admin-event-status {
   display: inline-block;
-  padding: 0.24rem 0.65rem;
+  padding: 0.26rem 0.7rem;
   font-size: 0.7rem;
   font-weight: 600;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .status--active {
@@ -112,19 +150,39 @@
 .admin-event-table__actions {
   display: inline-flex;
   align-items: center;
-  gap: 0.45rem;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .admin-action-btn {
-  padding: 0.4rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
+  padding: 0.45rem 0.8rem;
   font-size: 0.72rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  flex-shrink: 0;
+  line-height: 1;
   background-color: var(--bg-primary);
   border: 1px solid var(--border-light);
   color: var(--text-primary);
+  cursor: pointer;
+  border-radius: 2px;
   transition: var(--transition-smooth);
+}
+
+.admin-action-btn__icon {
+  font-size: 0.9em;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
 }
 
 .admin-action-btn:hover {
@@ -133,10 +191,21 @@
   color: #ffffff;
 }
 
+.admin-action-btn--gold {
+  border-color: rgba(201, 169, 110, 0.45);
+  background-color: #faf8f5;
+  color: var(--text-primary);
+}
+
 .admin-action-btn--gold:hover {
   border-color: var(--gold);
   background-color: var(--gold);
   color: #ffffff;
+}
+
+.admin-action-btn--danger {
+  color: #b91c1c;
+  border-color: rgba(185, 28, 28, 0.25);
 }
 
 .admin-action-btn--danger:hover {
@@ -163,6 +232,10 @@
 }
 
 @media (max-width: 860px) {
+  .admin-event-table {
+    min-width: 0;
+  }
+
   .admin-event-table thead {
     display: none;
   }
@@ -176,12 +249,12 @@
   }
 
   .admin-event-table tr {
-    padding: 1rem;
+    padding: 1.25rem 1rem;
     border-bottom: 1px solid var(--border-light);
   }
 
   .admin-event-table td {
-    padding: 0.5rem 0;
+    padding: 0.45rem 0;
     border-bottom: none;
     display: flex;
     justify-content: space-between;
@@ -197,10 +270,50 @@
     text-transform: uppercase;
     color: var(--text-muted);
     text-align: left;
+    margin-right: 1rem;
+    flex-shrink: 0;
+  }
+
+  .admin-event-table td[data-label="Event Name"] {
+    min-width: 0;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .admin-event-table td[data-label="Event Name"]::before {
+    margin-bottom: 0.4rem;
+  }
+
+  .admin-event-table td[data-label="Actions"] {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    margin-top: 0.6rem;
+    padding-top: 0.85rem;
+    border-top: 1px dashed var(--border-light);
+  }
+
+  .admin-event-table td[data-label="Actions"]::before {
+    margin-bottom: 0.5rem;
+  }
+
+  .admin-event-table__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 0.45rem;
+    width: 100%;
+  }
+
+  .admin-action-btn {
+    flex: 1 1 calc(50% - 0.45rem);
+    min-width: 110px;
+    padding: 0.5rem 0.6rem;
+    text-align: center;
   }
 
   .admin-event-table__primary {
     text-align: left;
+    width: 100%;
   }
 }
-

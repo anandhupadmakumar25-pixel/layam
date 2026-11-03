@@ -579,3 +579,29 @@
   }
 }
 
+
+@media (max-width: 480px) {
+  .admin-rec__kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .admin-rec__selector-card,
+  .admin-rec-card,
+  .admin-rec-empty {
+    padding: 1.25rem 0.95rem;
+  }
+
+  .admin-rec-modal__dialog {
+    max-width: 95vw;
+    padding: 1.25rem 0.95rem;
+  }
+
+  .admin-rec-modal__actions {
+    flex-direction: column;
+  }
+
+  .admin-rec-modal__actions .btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

@@ -69,25 +69,29 @@ function EventTable({ events, onOpenLiveHub, onView, onEdit, onDelete }) {
                     onClick={() => onOpenLiveHub && onOpenLiveHub(event)}
                     title="Open Live Station for instant QR placard & photo dropzone"
                   >
-                    ⚡ Live Station
+                    <span className="admin-action-btn__icon">⚡</span>
+                    <span>Live Station</span>
                   </button>
                   <Link
                     to={`/admin/gallery?event=${event.id}`}
                     className="admin-action-btn"
                   >
-                    📸 Photos
+                    <span className="admin-action-btn__icon">📸</span>
+                    <span>Photos</span>
                   </Link>
                   <Link
                     to={`/admin/qr-codes?event=${event.id}`}
                     className="admin-action-btn"
                   >
-                    📱 QR Pass
+                    <span className="admin-action-btn__icon">📱</span>
+                    <span>QR Pass</span>
                   </Link>
                   <Link
                     to={`/admin/guest-activity?event=${event.id}`}
                     className="admin-action-btn"
                   >
-                    📊 Activity
+                    <span className="admin-action-btn__icon">📊</span>
+                    <span>Activity</span>
                   </Link>
                   <button
                     type="button"

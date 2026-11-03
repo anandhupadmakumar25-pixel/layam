@@ -48,9 +48,6 @@ function AdminSidebar({ isOpen, onClose }) {
               alt="Layam Wedding Cinemas"
               className="admin-sidebar__logo-img"
             />
-            <span className="admin-sidebar__role-tag">
-              {isSuperAdmin ? 'SUPER ADMIN' : 'STUDIO ADMIN'}
-            </span>
           </Link>
         </div>
 

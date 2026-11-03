@@ -25,6 +25,7 @@
 
   --transition-smooth: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
   --container-width: 1280px;
+  --nav-height: 88px;
 }
 
 * {
@@ -35,10 +36,13 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 body {
   min-height: 100vh;
+  min-height: -webkit-fill-available;
   font-family: var(--font-sans);
   font-weight: 400;
   line-height: 1.65;
@@ -46,6 +50,8 @@ body {
   background-color: var(--bg-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
 }
 
 h1,
@@ -67,6 +73,7 @@ a {
 
 img {
   max-width: 100%;
+  height: auto;
   display: block;
 }
 
@@ -75,6 +82,7 @@ button {
   cursor: pointer;
 }
 
+/* Fluid responsive container */
 .container {
   width: 100%;
   max-width: var(--container-width);
@@ -99,6 +107,8 @@ button {
   position: relative;
   overflow: hidden;
   border-radius: 2px;
+  text-align: center;
+  white-space: nowrap;
 }
 
 .btn-sm {
@@ -268,19 +278,93 @@ button {
   border-color: rgba(197, 160, 89, 0.4);
 }
 
+/* Large Desktop / 4K Displays (>= 1600px) */
+@media (min-width: 1600px) {
+  :root {
+    --container-width: 1400px;
+  }
+
+  .container {
+    padding: 0 2.5rem;
+  }
+}
+
+/* Medium Desktop / Laptops (1025px - 1280px) */
+@media (max-width: 1280px) {
+  .container {
+    padding: 0 1.75rem;
+  }
+}
+
+/* Tablets (Landscape & Portrait: 769px - 1024px) */
+@media (max-width: 1024px) {
+  :root {
+    --nav-height: 76px;
+  }
+
+  .container {
+    padding: 0 1.5rem;
+  }
+
+  .btn {
+    padding: 0.85rem 1.85rem;
+    font-size: 0.78rem;
+  }
+}
+
+/* Mobile Devices (<= 768px) */
 @media (max-width: 768px) {
+  :root {
+    --nav-height: 72px;
+  }
+
   .container {
     padding: 0 1.25rem;
   }
 
   .btn {
     padding: 0.85rem 1.6rem;
-    font-size: 0.75rem;
-    width: 100%;
+    font-size: 0.76rem;
+    letter-spacing: 0.14em;
+    white-space: normal;
   }
 
   .btn-sm {
-    width: auto;
     padding: 0.45rem 1rem;
+    font-size: 0.7rem;
+  }
+}
+
+/* Small Mobile Devices (<= 480px) */
+@media (max-width: 480px) {
+  :root {
+    --nav-height: 68px;
+  }
+
+  .container {
+    padding: 0 1rem;
+  }
+
+  .btn {
+    padding: 0.8rem 1.4rem;
+    font-size: 0.74rem;
+    letter-spacing: 0.12em;
+    gap: 0.5rem;
+  }
+}
+
+/* Extra-compact Mobile Devices (<= 360px) */
+@media (max-width: 360px) {
+  :root {
+    --nav-height: 64px;
+  }
+
+  .container {
+    padding: 0 0.85rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.15rem;
+    font-size: 0.72rem;
   }
 }

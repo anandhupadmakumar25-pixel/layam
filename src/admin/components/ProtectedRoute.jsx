@@ -9,7 +9,7 @@ function ProtectedRoute({ children }) {
     return (
       <div className="admin-auth-loading">
         <div className="admin-auth-loading__box">
-          <span className="admin-auth-loading__eyebrow">LAYAM WEDDING CINEMAS STUDIO</span>
+          <span className="admin-auth-loading__eyebrow">Layam Wedding Cinemas</span>
           <p>Verifying administrator credentials...</p>
         </div>
       </div>

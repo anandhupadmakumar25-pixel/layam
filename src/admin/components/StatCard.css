@@ -56,11 +56,11 @@
   font-weight: 600;
   color: var(--text-primary);
   line-height: 1.05;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0;
 }
 
 .admin-stat-card__sub {
   font-size: 0.82rem;
   color: var(--text-muted);
+  margin-top: 0.45rem;
 }
-

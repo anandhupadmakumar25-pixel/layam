@@ -134,3 +134,20 @@
   color: var(--text-secondary);
 }
 
+
+@media (max-width: 640px) {
+  .photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+
+  .photo-grid-card__body {
+    padding: 0.75rem 0.85rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .photo-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -267,6 +267,7 @@
   .admin-overview__stats-grid,
   .admin-photo-grid {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.15rem;
   }
 
   .admin-overview__split {
@@ -275,9 +276,45 @@
 }
 
 @media (max-width: 640px) {
+  .admin-overview {
+    gap: 1.35rem;
+  }
+
+  .admin-overview__quick-actions,
+  .admin-panel {
+    padding: 1.25rem 1rem;
+  }
+
+  .admin-section-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+
+  .admin-section-head h2 {
+    font-size: 1.25rem;
+  }
+
+  .admin-overview__action-buttons .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .admin-photo-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+  }
+}
+
+@media (max-width: 440px) {
   .admin-overview__stats-grid,
   .admin-photo-grid {
     grid-template-columns: 1fr;
+  }
+
+  .admin-overview__quick-actions,
+  .admin-panel {
+    padding: 1rem 0.85rem;
   }
 }
 

@@ -33,7 +33,11 @@ function AdminLogin() {
       await login(identifier.trim(), password)
       navigate(redirectTo, { replace: true })
     } catch (err) {
-      setErrorMessage(err.message || 'Invalid administrator credentials.')
+      if (err.message === 'Failed to fetch' || err.name === 'TypeError') {
+        setErrorMessage('Cannot connect to the studio backend server (http://127.0.0.1:8000). Please start the backend server.')
+      } else {
+        setErrorMessage(err.message || 'Invalid administrator credentials.')
+      }
     } finally {
       setSubmitting(false)
     }

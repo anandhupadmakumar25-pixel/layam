@@ -18,7 +18,7 @@ const EMPTY_FORM = {
   description: '',
   event_date: getTodayDateString(),
   location: '',
-  category: 'Weddings',
+  category: 'Matrimony & Celebration',
   cover_image: '',
   photo_count: 0,
   status: 'Active',
@@ -224,7 +224,7 @@ function AdminEvents() {
       {/* Top Toolbar */}
       <div className="admin-events__toolbar">
         <div>
-          <span className="admin-events__eyebrow">Live Django REST CRUD</span>
+          <span className="admin-events__eyebrow">Live Station Management</span>
           <h2 className="admin-events__heading">Studio Event Archives ({events.length})</h2>
         </div>
 
@@ -355,11 +355,10 @@ function AdminEvents() {
                   value={formData.category}
                   onChange={handleChange}
                 >
-                  <option value="Weddings">Weddings</option>
-                  <option value="Galas">Galas</option>
-                  <option value="Editorial">Editorial</option>
-                  <option value="Brand">Brand</option>
-                  <option value="Portraits">Portraits</option>
+                  <option value="Matrimony & Celebration">Matrimony &amp; Celebration</option>
+                  <option value="Corporate Events">Corporate Events</option>
+                  <option value="Brand Concept Shoots">Brand Concept Shoots</option>
+                  <option value="Moments & Celebrations">Moments &amp; Celebrations</option>
                 </select>
                 {renderFieldError('category')}
               </div>

@@ -307,7 +307,7 @@
 
 @media (max-width: 640px) {
   .guest-entry-page {
-    padding: 7rem 0 3.5rem;
+    padding: 6rem 0 3rem;
   }
 
   .guest-entry-card {
@@ -316,6 +316,39 @@
 
   .guest-entry__consent-box {
     padding: 1.5rem 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .guest-entry-page {
+    padding: 4.5rem 0 2.5rem;
+  }
+
+  .guest-entry-card {
+    padding: 1.5rem 1.15rem;
+  }
+
+  .guest-entry__consent-box {
+    padding: 1.25rem 0.95rem;
+  }
+
+  .guest-entry__logo-img {
+    height: 44px;
+    max-width: 220px;
+  }
+
+  .guest-entry__actions .btn {
+    width: 100%;
+  }
+
+  .guest-entry__checkbox-row {
+    padding: 0.85rem 0.95rem;
+  }
+}
+
+@media (max-width: 360px) {
+  .guest-entry-card {
+    padding: 1.25rem 0.85rem;
   }
 }
 

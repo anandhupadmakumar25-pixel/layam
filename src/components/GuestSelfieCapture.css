@@ -281,3 +281,28 @@
   gap: 0.9rem;
 }
 
+
+@media (max-width: 480px) {
+  .guest-selfie-capture__dropzone {
+    padding: 2rem 1.25rem;
+  }
+
+  .guest-selfie-capture__dropzone strong {
+    font-size: 1.2rem;
+  }
+
+  .guest-selfie-capture__actions {
+    flex-direction: column;
+  }
+
+  .guest-selfie-capture__actions .btn {
+    width: 100%;
+  }
+
+  .guest-selfie-capture__tab {
+    padding: 0.5rem 0.85rem;
+    font-size: 0.68rem;
+    flex: 1;
+    text-align: center;
+  }
+}
