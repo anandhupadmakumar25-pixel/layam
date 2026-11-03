@@ -5,7 +5,6 @@ import ServiceCard from "../components/ServiceCard.jsx";
 import EventCard from "../components/EventCard.jsx";
 import EventLightbox from "../components/EventLightbox.jsx";
 import {
-  STUDIO_STATS,
   SERVICES_DATA,
   FEATURED_EVENTS,
 } from "../data/studioData.js";
@@ -203,14 +202,12 @@ function Home() {
           </div>
         </div>
 
-        <div className="hero-banner__stats-bar">
-          <div className="container hero-banner__stats-grid">
-            {STUDIO_STATS.map((stat) => (
-              <div key={stat.label} className="hero-banner__stat">
-                <span className="hero-banner__stat-value">{stat.value}</span>
-                <span className="hero-banner__stat-label">{stat.label}</span>
-              </div>
-            ))}
+        <div className="hero-banner__quote-bar">
+          <div className="container hero-banner__quote-content">
+            <span className="hero-banner__quote-eyebrow">THE ART OF PRESERVING MEMORIES</span>
+            <blockquote className="hero-banner__quote-text">
+              &ldquo;Life happens in moments. We make them timeless.&rdquo;
+            </blockquote>
           </div>
         </div>
       </section>
