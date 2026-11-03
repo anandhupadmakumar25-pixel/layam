@@ -79,8 +79,8 @@ function Contact() {
 
               <div className="contact-info__image-wrap">
                 <img
-                  src="https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=900&q=85"
-                  alt="Minimalist architectural studio interior"
+                  src="/layam-studio-office.jpg"
+                  alt="Layam Wedding Cinemas Studio Kolenchery"
                   className="contact-info__img"
                 />
               </div>

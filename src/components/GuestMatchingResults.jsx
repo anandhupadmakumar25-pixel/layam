@@ -197,7 +197,7 @@ function GuestMatchingResults({
     <div className="guest-results fade-up">
       <div className="guest-results__header">
         <span className="section-eyebrow">
-          {eventInfo?.category || 'Private Studio Collection'} &bull; {eventInfo?.name}
+          {eventInfo?.name || 'Private Studio Collection'}
         </span>
         <h2 className="guest-results__title">
           {matchedCount} Matching Photograph{matchedCount === 1 ? '' : 's'} Found

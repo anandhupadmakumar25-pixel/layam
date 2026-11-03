@@ -279,9 +279,6 @@ function GuestEntry() {
               <span className="guest-entry__status-pill guest-entry__status-pill--valid">
                 Verified Event Guest Pass
               </span>
-              <span className="section-eyebrow" style={{ marginTop: '1rem' }}>
-                {eventInfo?.category || 'Private Studio Collection'}
-              </span>
               <h1 className="guest-entry__title">{eventInfo?.name}</h1>
               <p className="guest-entry__meta">
                 {formatEventDate(eventInfo?.event_date)}
@@ -350,8 +347,10 @@ function GuestEntry() {
                   <span className="section-eyebrow">Step 1 of 3 &bull; Privacy &amp; Consent</span>
                   <h2>Find Your Event Photographs Privately</h2>
                   <p>
-                    {verification?.welcome_message ||
-                      `Welcome to the official Layam Wedding Cinemas guest portal for ${eventInfo?.name}.`}
+                    {(
+                      verification?.welcome_message ||
+                      `Welcome to the official Layam Wedding Cinemas guest portal for ${eventInfo?.name}.`
+                    ).replace(/Smart Studio/gi, 'Layam Wedding Cinemas')}
                   </p>
                 </div>
 
