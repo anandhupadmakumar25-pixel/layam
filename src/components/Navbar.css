@@ -1,11 +1,21 @@
 .studio-navbar {
   position: sticky;
   top: 0;
-  z-index: 100;
+  left: 0;
+  right: 0;
+  width: 100%;
+  z-index: 1000;
   background-color: rgba(255, 255, 255, 0.96);
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--border-light);
-  transition: var(--transition-smooth);
+  transition: background-color 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, height 0.3s ease;
+}
+
+.studio-navbar.is-scrolled {
+  background-color: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+  border-bottom-color: rgba(201, 169, 110, 0.3);
 }
 
 .studio-navbar__inner {
@@ -13,6 +23,11 @@
   align-items: center;
   justify-content: space-between;
   height: var(--nav-height, 88px);
+  transition: height 0.3s ease;
+}
+
+.studio-navbar.is-scrolled .studio-navbar__inner {
+  height: calc(var(--nav-height, 88px) - 6px);
 }
 
 /* Studio Brand Logo */

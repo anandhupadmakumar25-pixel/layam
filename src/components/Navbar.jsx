@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { NavLink, Link } from 'react-router-dom'
 import './Navbar.css'
 
@@ -12,11 +12,21 @@ const NAV_ITEMS = [
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [isScrolled, setIsScrolled] = useState(false)
 
   const closeMenu = () => setMenuOpen(false)
 
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 15)
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
-    <header className="studio-navbar">
+    <header className={`studio-navbar ${isScrolled ? 'is-scrolled' : ''}`}>
       <div className="container studio-navbar__inner">
         <Link to="/" className="studio-logo" onClick={closeMenu}>
           <img
@@ -64,4 +74,3 @@ function Navbar() {
 }
 
 export default Navbar
-

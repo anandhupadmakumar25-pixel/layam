@@ -1,6 +1,5 @@
 import { Link } from 'react-router-dom'
 import SectionHeader from '../components/SectionHeader.jsx'
-import { STUDIO_STATS } from '../data/studioData.js'
 import './About.css'
 
 const TESTIMONIALS = [
@@ -39,6 +38,16 @@ function About() {
             intelligent cloud archiving for the world’s most discerning hosts.
           </p>
         </div>
+
+        {/* Hero Bottom Quote Bar (Same as Hero Banner Bottom) */}
+        <div className="hero-banner__quote-bar about-hero__quote-bar">
+          <div className="container hero-banner__quote-content">
+            <span className="hero-banner__quote-eyebrow">THE ART OF PRESERVING MEMORIES</span>
+            <blockquote className="hero-banner__quote-text">
+              &ldquo;Life happens in moments. We make them timeless.&rdquo;
+            </blockquote>
+          </div>
+        </div>
       </section>
 
       {/* Story Split Section */}
@@ -58,14 +67,6 @@ function About() {
               unindexed files. In response, we engineered the Layam Intelligent Archive—combining bespoke
               color grading with instant, privacy-first photo discovery.
             </p>
-            <div className="about-story__stats">
-              {STUDIO_STATS.map((stat) => (
-                <div key={stat.label} className="about-story__stat-item">
-                  <strong>{stat.value}</strong>
-                  <span>{stat.label}</span>
-                </div>
-              ))}
-            </div>
           </div>
 
           <div className="about-story__images">
