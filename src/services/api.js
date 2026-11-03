@@ -587,43 +587,51 @@ export async function uploadEventPhotos(eventId, files, onProgress) {
   let failedAll = []
   let latestEventPhotoCount = null
   let completedFiles = 0
+  let highestPercent = 0
 
   const chunkProgressMap = new Map()
 
   function updateGlobalProgress() {
-    if (typeof onProgress !== 'function') return
-    let activeChunkBytesLoaded = 0
-    let activeChunkBytesTotal = 0
-    chunkProgressMap.forEach(({ loaded, total }) => {
-      if (total > 0) {
-        activeChunkBytesLoaded += loaded
-        activeChunkBytesTotal += total
+    if (typeof onProgress !== 'function' || totalFiles <= 0) return
+    let activeFilesEquivalent = 0
+    chunkProgressMap.forEach(({ loaded, total, fileCount }) => {
+      if (total > 0 && fileCount > 0) {
+        const chunkRatio = Math.min(1, Math.max(0, loaded / total))
+        activeFilesEquivalent += chunkRatio * fileCount
       }
     })
 
-    const completedFraction = completedFiles / totalFiles
-    const activeFraction =
-      activeChunkBytesTotal > 0
-        ? (activeChunkBytesLoaded / activeChunkBytesTotal) *
-          ((totalFiles - completedFiles) / totalFiles)
-        : 0
-
-    const percent = Math.min(99, Math.round((completedFraction + activeFraction) * 100))
-    onProgress(percent)
+    const totalProgressRatio = (completedFiles + activeFilesEquivalent) / totalFiles
+    const rawPercent = Math.min(99, Math.round(totalProgressRatio * 100))
+    highestPercent = Math.max(highestPercent, rawPercent)
+    onProgress(highestPercent)
   }
 
   async function processChunk(chunkItem) {
     const { index, files: chunkFiles } = chunkItem
+    // Show subtle initial progress while compressing this batch
+    chunkProgressMap.set(index, { loaded: 5, total: 100, fileCount: chunkFiles.length })
+    updateGlobalProgress()
+
     // Compress large (> 6 MB) uncompressed camera files just-in-time per batch to < 10 MB
     const preparedFiles = await Promise.all(
       chunkFiles.map((f) => smartCompressGalleryPhoto(f))
     )
 
+    chunkProgressMap.set(index, { loaded: 15, total: 100, fileCount: chunkFiles.length })
+    updateGlobalProgress()
+
     const result = await uploadChunkWithProgress(
       eventId,
       preparedFiles,
       (loaded, total) => {
-        chunkProgressMap.set(index, { loaded, total })
+        // Reserve first 15% of each chunk's weight for compression and 85% for network upload
+        const networkRatio = total > 0 ? Math.min(1, loaded / total) : 0
+        chunkProgressMap.set(index, {
+          loaded: 15 + networkRatio * 85,
+          total: 100,
+          fileCount: chunkFiles.length,
+        })
         updateGlobalProgress()
       }
     )
