@@ -8,6 +8,7 @@ const PAGE_TITLES = {
   '/admin': 'Studio Overview',
   '/admin/events': 'Event Management',
   '/admin/gallery': 'Photo Gallery Engine',
+  '/admin/photo-sorter': 'AI Photo Culling & Sorter',
   '/admin/qr-codes': 'Event QR Codes',
   '/admin/recognition': 'AI Face Recognition Engine',
   '/admin/guest-activity': 'Guest Activity Log',

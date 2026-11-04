@@ -6,16 +6,17 @@ const ALL_SIDEBAR_ITEMS = [
   { label: 'Overview', path: '/admin', exact: true, moduleKey: 'dashboard', code: '01' },
   { label: 'Events & Live Hub', path: '/admin/events', exact: false, moduleKey: 'events', code: '02' },
   { label: 'Photo Gallery', path: '/admin/gallery', exact: false, moduleKey: 'gallery', code: '03' },
-  { label: 'QR Passes', path: '/admin/qr-codes', exact: false, moduleKey: 'qr_codes', code: '04' },
-  { label: 'AI Recognition', path: '/admin/recognition', exact: false, moduleKey: 'ai_recognition', code: '05' },
-  { label: 'Guest Activity', path: '/admin/guest-activity', exact: false, moduleKey: 'guest_activity', code: '06' },
+  { label: 'AI Photo Sorter', path: '/admin/photo-sorter', exact: false, moduleKey: 'gallery', code: '04' },
+  { label: 'QR Passes', path: '/admin/qr-codes', exact: false, moduleKey: 'qr_codes', code: '05' },
+  { label: 'AI Recognition', path: '/admin/recognition', exact: false, moduleKey: 'ai_recognition', code: '06' },
+  { label: 'Guest Activity', path: '/admin/guest-activity', exact: false, moduleKey: 'guest_activity', code: '07' },
   {
     label: 'Staff Admins',
     path: '/admin/administrators',
     exact: false,
     moduleKey: 'administrators',
     superAdminOnly: true,
-    code: '07',
+    code: '08',
   },
 ]
 

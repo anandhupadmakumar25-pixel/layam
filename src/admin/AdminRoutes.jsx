@@ -5,6 +5,7 @@ import AdminLogin from './pages/AdminLogin.jsx'
 import AdminOverview from './pages/AdminOverview.jsx'
 import AdminEvents from './pages/AdminEvents.jsx'
 import AdminGallery from './pages/AdminGallery.jsx'
+import AdminPhotoSorter from './pages/AdminPhotoSorter.jsx'
 import AdminQrCodes from './pages/AdminQrCodes.jsx'
 import AdminRecognition from './pages/AdminRecognition.jsx'
 import AdminGuestActivity from './pages/AdminGuestActivity.jsx'
@@ -49,6 +50,14 @@ function AdminRoutes() {
           element={
             <ModuleGuard moduleKey="gallery" title="Photo Gallery Engine">
               <AdminGallery />
+            </ModuleGuard>
+          }
+        />
+        <Route
+          path="photo-sorter"
+          element={
+            <ModuleGuard moduleKey="gallery" title="AI Photo Culling & Folder Sorter">
+              <AdminPhotoSorter />
             </ModuleGuard>
           }
         />
