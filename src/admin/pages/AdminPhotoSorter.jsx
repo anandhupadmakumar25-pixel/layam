@@ -26,9 +26,9 @@ async function getFaceLandmarker() {
         },
         outputFaceBlendshapes: true,
         runningMode: 'IMAGE',
-        numFaces: 8,
-        minFaceDetectionConfidence: 0.45,
-        minFacePresenceConfidence: 0.45,
+        numFaces: 10,
+        minFaceDetectionConfidence: 0.4,
+        minFacePresenceConfidence: 0.4,
       })
     })().catch((err) => {
       cachedLandmarkerPromise = null
@@ -109,6 +109,34 @@ function computeRegionSharpness(imageData, width, height, region = null) {
   return Math.max(0, sumSq / count - mean * mean)
 }
 
+// Fast 16x16 downsampled grayscale fingerprint for finding duplicate / burst shots
+function computeImageFingerprint(ctx, cw, ch) {
+  const fpCanvas = document.createElement('canvas')
+  fpCanvas.width = 16
+  fpCanvas.height = 16
+  const fpCtx = fpCanvas.getContext('2d')
+  fpCtx.drawImage(ctx.canvas, 0, 0, 16, 16)
+  const data = fpCtx.getImageData(0, 0, 16, 16).data
+  const fp = new Uint8Array(256)
+  for (let i = 0; i < 256; i++) {
+    fp[i] = Math.round(
+      0.299 * data[i * 4] + 0.587 * data[i * 4 + 1] + 0.114 * data[i * 4 + 2]
+    )
+  }
+  return fp
+}
+
+function computeFingerprintSimilarity(fpA, fpB) {
+  if (!fpA || !fpB || fpA.length !== fpB.length) return 0
+  let diffSum = 0
+  for (let i = 0; i < fpA.length; i++) {
+    diffSum += Math.abs(fpA[i] - fpB[i])
+  }
+  // Max possible diff is 256 * 255 = 65280
+  const normalizedDiff = diffSum / (fpA.length * 255)
+  return Math.max(0, 1 - normalizedDiff)
+}
+
 async function analyzeSinglePhoto(file, landmarker, thresholds) {
   const objectUrl = URL.createObjectURL(file)
   try {
@@ -122,7 +150,7 @@ async function analyzeSinglePhoto(file, landmarker, thresholds) {
     const origW = img.naturalWidth || img.width || 1200
     const origH = img.naturalHeight || img.height || 800
 
-    // Scale to analysis resolution (max 960px long edge) for fast & consistent sharpness + landmark detection
+    // Scale to analysis resolution (max 960px long edge)
     const maxAnalysisDim = 960
     const scale = Math.min(1, maxAnalysisDim / Math.max(origW, origH))
     const cw = Math.max(64, Math.round(origW * scale))
@@ -134,11 +162,14 @@ async function analyzeSinglePhoto(file, landmarker, thresholds) {
     const ctx = canvas.getContext('2d', { willReadFrequently: true })
     ctx.drawImage(img, 0, 0, cw, ch)
     const imgData = ctx.getImageData(0, 0, cw, ch)
+    const fingerprint = computeImageFingerprint(ctx, cw, ch)
 
     let faceBoxes = []
     let closedFacesCount = 0
     let openFacesCount = 0
     let maxBlinkScore = 0
+    let coveredFaceCount = 0
+    let badPoseCount = 0
 
     if (landmarker) {
       const result = landmarker.detect(canvas)
@@ -189,6 +220,75 @@ async function analyzeSinglePhoto(file, landmarker, thresholds) {
           openFacesCount++
         }
 
+        // --- NEW CHECK 1: Face Covered / Occlusion Detection ---
+        // Key landmarks: nose tip (1), chin (152), left cheek (234), right cheek (454), upper lip (0), lower lip (17)
+        const nose = landmarks[1]
+        const chin = landmarks[152]
+        const leftCheek = landmarks[234]
+        const rightCheek = landmarks[454]
+        const upperLip = landmarks[0]
+        const lowerLip = landmarks[17]
+
+        let isFaceCovered = false
+        let coverReason = ''
+
+        // Geometric proportion check: if nose or lips are missing or displaced relative to cheek span
+        if (nose && chin && leftCheek && rightCheek) {
+          const cheekSpan = Math.abs(rightCheek.x - leftCheek.x)
+          const faceHeight = Math.abs(chin.y - (nose.y - cheekSpan * 0.5))
+          // If mouth landmarks are collapsed or nose is obscured
+          if (upperLip && lowerLip && cheekSpan > 0.04) {
+            const mouthHeight = Math.abs(lowerLip.y - upperLip.y)
+            const mouthToChin = Math.abs(chin.y - lowerLip.y)
+            if (mouthToChin < 0.015 * faceHeight || mouthHeight < 0.002) {
+              isFaceCovered = true
+              coverReason = 'Mouth / chin area covered'
+            }
+          }
+        }
+
+        // --- NEW CHECK 2: Bad Posing / Awkward Angles Detection ---
+        // Head Pose Yaw (turned away) & Pitch (looking down/up)
+        let isBadPose = false
+        let poseReason = ''
+
+        if (nose && leftCheek && rightCheek && chin) {
+          const distToLeftCheek = Math.abs(nose.x - leftCheek.x)
+          const distToRightCheek = Math.abs(rightCheek.x - nose.x)
+          const totalCheek = distToLeftCheek + distToRightCheek
+          if (totalCheek > 0.03) {
+            const yawRatio = distToLeftCheek / totalCheek
+            // If nose is closer than 15% to either cheek, face is turned severely away (>55 degrees)
+            if (yawRatio < 0.16 || yawRatio > 0.84) {
+              isBadPose = true
+              poseReason = 'Head turned sharply away from camera'
+            }
+          }
+
+          // Pitch check: severe tilt down (looking at floor/phone) or up
+          const midEyesY = (landmarks[33]?.y + landmarks[263]?.y) / 2
+          if (midEyesY && chin) {
+            const eyeToNose = nose.y - midEyesY
+            const noseToChin = chin.y - nose.y
+            if (eyeToNose > 0 && noseToChin > 0) {
+              const pitchRatio = eyeToNose / noseToChin
+              if (pitchRatio > 1.85) {
+                isBadPose = true
+                poseReason = 'Head tilted sharply downward'
+              }
+            }
+          }
+
+          // Edge of frame check: face cut off at borders
+          if (minX < 0.015 || maxX > 0.985 || minY < 0.015 || maxY > 0.985) {
+            isBadPose = true
+            poseReason = 'Face cut off at frame border'
+          }
+        }
+
+        if (isFaceCovered) coveredFaceCount++
+        if (isBadPose) badPoseCount++
+
         // Compute sharpness inside this face bounding box
         const fx = Math.max(0, minX * cw)
         const fy = Math.max(0, minY * ch)
@@ -208,13 +308,17 @@ async function analyzeSinglePhoto(file, landmarker, thresholds) {
           h: Math.min(1, maxY - minY),
           isEyesClosed,
           blinkPercent,
+          isFaceCovered,
+          coverReason,
+          isBadPose,
+          poseReason,
           ear: Number(avgEAR.toFixed(3)),
           sharpness: Math.round(faceSharpness),
         })
       })
     }
 
-    // Overall sharpness: if faces exist, use the sharpest/average face sharpness so bokeh backgrounds never trigger false blur
+    // Overall sharpness: if faces exist, use the max face sharpness so bokeh doesn't trigger false blur
     let sharpnessScore = 0
     if (faceBoxes.length > 0) {
       const maxFaceSharpness = Math.max(...faceBoxes.map((b) => b.sharpness))
@@ -227,10 +331,11 @@ async function analyzeSinglePhoto(file, landmarker, thresholds) {
     const totalFaces = faceBoxes.length
 
     // Classification priority:
-    // 1. Blurry if sharpness is below threshold
-    // 2. Partial Blink (needs client confirmation -> goes to Eyes_Closed when confirmed) if >1 faces and both open & closed exist
-    // 3. Eyes Closed if all detected faces have closed eyes (or solo portrait blinked)
-    // 4. Good / Sharp otherwise
+    // 1. Blurry
+    // 2. Face Covered (hand, mic, object)
+    // 3. Bad Pose (looking away, cut off)
+    // 4. Eyes Closed / Partial Blink
+    // 5. Good
     let detectedCategory = 'good'
     let partialBlinkPending = false
     let statusReason = 'Sharp focus & open eyes'
@@ -238,9 +343,16 @@ async function analyzeSinglePhoto(file, landmarker, thresholds) {
     if (isBlurry) {
       detectedCategory = 'blurry'
       statusReason = `Low sharpness score (${sharpnessScore} < ${thresholds.blurThreshold})`
+    } else if (coveredFaceCount > 0) {
+      detectedCategory = 'face_covered'
+      statusReason = `Face covered or obstructed (${coveredFaceCount} face covered by hand/object)`
+    } else if (badPoseCount > 0 && totalFaces <= 2) {
+      // In solo/couple portraits, severe turn-away or cut-off is flagged as bad pose
+      detectedCategory = 'bad_pose'
+      statusReason = `Awkward angle / face turned away or cut at frame edge`
     } else if (totalFaces > 0 && closedFacesCount > 0) {
       if (openFacesCount > 0) {
-        // Group photo with partial blink — ask client to confirm putting into Eyes_Closed
+        // Group photo with partial blink — ask client to confirm
         detectedCategory = 'partial_blink'
         partialBlinkPending = true
         statusReason = `Partial Blink: ${closedFacesCount} of ${totalFaces} faces has eyes closed (Confirm to move to Eyes_Closed)`
@@ -263,9 +375,14 @@ async function analyzeSinglePhoto(file, landmarker, thresholds) {
       totalFaces,
       closedFacesCount,
       openFacesCount,
+      coveredFaceCount,
+      badPoseCount,
       faceBoxes,
+      fingerprint,
+      isDuplicate: false,
+      duplicateGroupId: null,
       detectedCategory,
-      category: detectedCategory, // Current active category ('good' | 'eyes_closed' | 'blurry' | 'partial_blink')
+      category: detectedCategory,
       partialBlinkPending,
       statusReason,
     }
@@ -274,13 +391,79 @@ async function analyzeSinglePhoto(file, landmarker, thresholds) {
   }
 }
 
+// Post-pass to group duplicate / burst shots and recommend the best one
+function detectAndGroupDuplicates(itemsList) {
+  const SIMILARITY_THRESHOLD = 0.88
+  let groupIdCounter = 1
+  const groups = new Map()
+
+  for (let i = 0; i < itemsList.length; i++) {
+    const itemA = itemsList[i]
+    if (!itemA.fingerprint) continue
+
+    for (let j = i + 1; j < Math.min(itemsList.length, i + 10); j++) {
+      const itemB = itemsList[j]
+      if (!itemB.fingerprint) continue
+
+      const sim = computeFingerprintSimilarity(itemA.fingerprint, itemB.fingerprint)
+      if (sim >= SIMILARITY_THRESHOLD) {
+        let gId = itemA.duplicateGroupId || itemB.duplicateGroupId
+        if (!gId) {
+          gId = groupIdCounter++
+          itemA.duplicateGroupId = gId
+        }
+        itemB.duplicateGroupId = gId
+
+        if (!groups.has(gId)) {
+          groups.set(gId, new Set())
+        }
+        groups.get(gId).add(itemA)
+        groups.get(gId).add(itemB)
+      }
+    }
+  }
+
+  // In each group, pick the single best photo (highest sharpness and fewest closed eyes)
+  // Keep the best as 'good', mark others as 'duplicate'
+  groups.forEach((itemSet) => {
+    const arr = Array.from(itemSet)
+    arr.sort((a, b) => {
+      // 1. Prefer no closed eyes
+      if (a.closedFacesCount !== b.closedFacesCount) {
+        return a.closedFacesCount - b.closedFacesCount
+      }
+      // 2. Prefer no covered faces
+      if (a.coveredFaceCount !== b.coveredFaceCount) {
+        return a.coveredFaceCount - b.coveredFaceCount
+      }
+      // 3. Prefer highest sharpness
+      return b.sharpnessScore - a.sharpnessScore
+    })
+
+    const bestOne = arr[0]
+    bestOne.isDuplicateBest = true
+
+    for (let k = 1; k < arr.length; k++) {
+      const dup = arr[k]
+      dup.isDuplicate = true
+      // Only reassign category to 'duplicate' if it wasn't already worse (blurry/closed eyes)
+      if (dup.category === 'good' || dup.category === 'partial_blink') {
+        dup.category = 'duplicate'
+        dup.statusReason = `Repeated / Burst Shot: duplicate of ${bestOne.name} (Best one kept as Good)`
+      }
+    }
+  })
+
+  return itemsList
+}
+
 function AdminPhotoSorter() {
   const [folderName, setFolderName] = useState('')
   const [directoryHandle, setDirectoryHandle] = useState(null)
   const [items, setItems] = useState([])
   const [scanning, setScanning] = useState(false)
   const [scanProgress, setScanProgress] = useState({ done: 0, total: 0 })
-  const [activeTab, setActiveTab] = useState('all') // 'all' | 'good' | 'eyes_closed' | 'partial_blink' | 'blurry'
+  const [activeTab, setActiveTab] = useState('all')
 
   // Sensitivity controls
   const [blurThreshold, setBlurThreshold] = useState(55)
@@ -342,7 +525,6 @@ function AdminPhotoSorter() {
       try {
         landmarker = await getFaceLandmarker()
       } catch {
-        // Fallback if offline/blocked: still performs sharpness analysis
         landmarker = null
       }
 
@@ -386,7 +568,12 @@ function AdminPhotoSorter() {
                 totalFaces: 0,
                 closedFacesCount: 0,
                 openFacesCount: 0,
+                coveredFaceCount: 0,
+                badPoseCount: 0,
                 faceBoxes: [],
+                fingerprint: null,
+                isDuplicate: false,
+                duplicateGroupId: null,
                 detectedCategory: 'good',
                 category: 'good',
                 partialBlinkPending: false,
@@ -400,6 +587,9 @@ function AdminPhotoSorter() {
         setScanProgress({ done: analyzed.length, total: fileEntries.length })
       }
 
+      // Run duplicate burst detection across all analyzed photos
+      const withDuplicates = detectAndGroupDuplicates(analyzed)
+      setItems([...withDuplicates])
       setScanning(false)
     },
     [blurThreshold, blinkThreshold]
@@ -444,7 +634,7 @@ function AdminPhotoSorter() {
     }
   }
 
-  // Method 2: Fallback Folder Input (<input webkitdirectory>)
+  // Method 2: Fallback Folder Input
   const handleFallbackInputChange = async (e) => {
     const fileList = Array.from(e.target.files || [])
     e.target.value = ''
@@ -462,16 +652,19 @@ function AdminPhotoSorter() {
     setItems((prev) =>
       prev.map((item) => {
         if (item.id !== id) return item
+        const reasonMap = {
+          good: 'Approved by Admin as Good Photo',
+          duplicate: 'Confirmed: Repeated / Duplicate (Move to Duplicates folder)',
+          face_covered: 'Confirmed: Face Covered (Move to Face_Covered folder)',
+          bad_pose: 'Confirmed: Bad Pose / Angle (Move to Bad_Pose folder)',
+          eyes_closed: 'Confirmed: Eyes Closed (Move to Eyes_Closed folder)',
+          blurry: 'Confirmed: Blurry (Move to Blurry_Photos folder)',
+        }
         return {
           ...item,
           category: nextCategory,
           partialBlinkPending: false,
-          statusReason:
-            nextCategory === 'good'
-              ? 'Approved by Admin as Good Photo'
-              : nextCategory === 'eyes_closed'
-              ? 'Confirmed: Eyes Closed (Will move to Eyes_Closed folder)'
-              : 'Confirmed: Blurry (Will move to Blurry_Photos folder)',
+          statusReason: reasonMap[nextCategory] || 'Category updated by Admin',
         }
       })
     )
@@ -497,7 +690,7 @@ function AdminPhotoSorter() {
     })
   }
 
-  // Move confirmed Eyes_Closed and Blurry photos into two separate folders on PC
+  // Move sorted rejected photos into dedicated separate folders on PC
   const handleMoveToSeparateFolders = async () => {
     const pendingPartials = items.filter(
       (i) => i.category === 'partial_blink' && !i.movedToFolder
@@ -506,7 +699,7 @@ function AdminPhotoSorter() {
 
     if (pendingPartials.length > 0) {
       const confirmPartials = window.confirm(
-        `You have ${pendingPartials.length} "Partial Blink" photo(s) awaiting confirmation.\n\nClick OK to confirm and move them directly into the "Eyes_Closed" folder as well, or Cancel to review them first.`
+        `You have ${pendingPartials.length} "Partial Blink" photo(s) awaiting confirmation.\n\nClick OK to confirm and move them directly into the "Eyes_Closed" folder, or Cancel to review them first.`
       )
       if (!confirmPartials) {
         setActiveTab('partial_blink')
@@ -520,17 +713,19 @@ function AdminPhotoSorter() {
       setItems(workingItems)
     }
 
-    const eyesClosedList = workingItems.filter(
-      (i) => i.category === 'eyes_closed' && !i.movedToFolder
-    )
-    const blurryList = workingItems.filter(
-      (i) => i.category === 'blurry' && !i.movedToFolder
-    )
+    const folderQueues = {
+      Eyes_Closed: workingItems.filter((i) => i.category === 'eyes_closed' && !i.movedToFolder),
+      Blurry_Photos: workingItems.filter((i) => i.category === 'blurry' && !i.movedToFolder),
+      Duplicates: workingItems.filter((i) => i.category === 'duplicate' && !i.movedToFolder),
+      Face_Covered: workingItems.filter((i) => i.category === 'face_covered' && !i.movedToFolder),
+      Bad_Pose: workingItems.filter((i) => i.category === 'bad_pose' && !i.movedToFolder),
+    }
 
-    if (eyesClosedList.length === 0 && blurryList.length === 0) {
+    const totalToMove = Object.values(folderQueues).reduce((acc, q) => acc + q.length, 0)
+    if (totalToMove === 0) {
       setActionBanner({
         type: 'error',
-        text: 'There are no Eyes Closed or Blurry photographs left to move.',
+        text: 'There are no rejected or repeated photographs left to move.',
       })
       return
     }
@@ -547,45 +742,21 @@ function AdminPhotoSorter() {
 
       if (!targetRootHandle) {
         throw new Error(
-          'Your current browser does not allow direct local folder creation. Please open this page in Google Chrome or Microsoft Edge to move files directly on your PC.'
+          'Your browser does not allow direct local folder creation. Please open this page in Google Chrome or Microsoft Edge to move files directly on your PC.'
         )
       }
 
-      let movedEyesCount = 0
-      let movedBlurryCount = 0
       const movedMap = new Map()
+      const summaryCounts = {}
 
-      // 1. Create "Eyes_Closed" folder if needed and move files
-      if (eyesClosedList.length > 0) {
-        const eyesFolderHandle = await targetRootHandle.getDirectoryHandle('Eyes_Closed', {
+      for (const [folderNameKey, fileList] of Object.entries(folderQueues)) {
+        if (fileList.length === 0) continue
+        const folderHandle = await targetRootHandle.getDirectoryHandle(folderNameKey, {
           create: true,
         })
-        for (const item of eyesClosedList) {
-          const destFileHandle = await eyesFolderHandle.getFileHandle(item.name, {
-            create: true,
-          })
-          const writable = await destFileHandle.createWritable()
-          await writable.write(item.file)
-          await writable.close()
-
-          // Remove original file from source folder so it is truly moved
-          try {
-            await targetRootHandle.removeEntry(item.name)
-          } catch {
-            // Ignore if source was chosen from a different folder
-          }
-          movedEyesCount++
-          movedMap.set(item.id, 'Eyes_Closed')
-        }
-      }
-
-      // 2. Create "Blurry_Photos" folder if needed and move files
-      if (blurryList.length > 0) {
-        const blurryFolderHandle = await targetRootHandle.getDirectoryHandle('Blurry_Photos', {
-          create: true,
-        })
-        for (const item of blurryList) {
-          const destFileHandle = await blurryFolderHandle.getFileHandle(item.name, {
+        let movedCount = 0
+        for (const item of fileList) {
+          const destFileHandle = await folderHandle.getFileHandle(item.name, {
             create: true,
           })
           const writable = await destFileHandle.createWritable()
@@ -595,11 +766,12 @@ function AdminPhotoSorter() {
           try {
             await targetRootHandle.removeEntry(item.name)
           } catch {
-            // Ignore if source was chosen from a different folder
+            // Ignore if entry remove fails
           }
-          movedBlurryCount++
-          movedMap.set(item.id, 'Blurry_Photos')
+          movedCount++
+          movedMap.set(item.id, folderNameKey)
         }
+        summaryCounts[folderNameKey] = movedCount
       }
 
       setItems((prev) =>
@@ -610,9 +782,13 @@ function AdminPhotoSorter() {
         )
       )
 
+      const summaryText = Object.entries(summaryCounts)
+        .map(([k, v]) => `${v} in ${k}`)
+        .join(', ')
+
       setActionBanner({
         type: 'success',
-        text: `Moved ${movedEyesCount} photo(s) into "${targetRootHandle.name}/Eyes_Closed/" and ${movedBlurryCount} photo(s) into "${targetRootHandle.name}/Blurry_Photos/"!`,
+        text: `Successfully organized and moved ${totalToMove} photo(s): ${summaryText}!`,
       })
     } catch (err) {
       if (err?.name !== 'AbortError') {
@@ -672,7 +848,16 @@ function AdminPhotoSorter() {
   }
 
   const counts = useMemo(() => {
-    const c = { all: items.length, good: 0, eyes_closed: 0, partial_blink: 0, blurry: 0 }
+    const c = {
+      all: items.length,
+      good: 0,
+      duplicate: 0,
+      face_covered: 0,
+      bad_pose: 0,
+      eyes_closed: 0,
+      partial_blink: 0,
+      blurry: 0,
+    }
     items.forEach((item) => {
       if (c[item.category] !== undefined) {
         c[item.category]++
@@ -713,6 +898,14 @@ function AdminPhotoSorter() {
     return () => window.removeEventListener('keydown', onKey)
   }, [previewItem, handleNavigatePreview])
 
+  const rejectedCount =
+    counts.eyes_closed +
+    counts.partial_blink +
+    counts.blurry +
+    counts.duplicate +
+    counts.face_covered +
+    counts.bad_pose
+
   return (
     <div className="admin-sorter fade-up">
       {/* Top Control Card */}
@@ -721,13 +914,13 @@ function AdminPhotoSorter() {
           <div>
             <span className="section-eyebrow">AI Smart Culling &amp; Folder Sorter</span>
             <h2 className="admin-sorter__title">
-              Detect Eyes Closed &amp; Blurry Photos Automatically
+              Detect Closed Eyes, Blur, Repeats &amp; Bad Poses
             </h2>
             <p className="admin-sorter__subtitle">
-              Select a local shoot folder on your PC. Our AI inspects every face for closed eyes,
-              partial group blinks, and focus blur—letting you preview, confirm, and automatically
-              move rejected shots into separate <code>Eyes_Closed</code> and{' '}
-              <code>Blurry_Photos</code> folders or upload only the good photos.
+              Select a local shoot folder on your PC. Our AI inspects every photo for closed eyes,
+              burst duplicates, hand/object face covering, awkward angles, and focus blur—letting
+              you preview, confirm, and automatically move rejected shots into separate folders on
+              your PC, or upload only the approved good photos to the cloud.
             </p>
           </div>
 
@@ -800,7 +993,7 @@ function AdminPhotoSorter() {
           <div className="admin-sorter__progress-box" role="status">
             <div className="admin-sorter__progress-header">
               <strong>
-                Scanning &amp; Detecting Faces / Eyes / Sharpness ({scanProgress.done} of{' '}
+                Scanning &amp; Detecting Faces, Eyes, Blurs &amp; Poses ({scanProgress.done} of{' '}
                 {scanProgress.total})...
               </strong>
               <span>
@@ -887,7 +1080,7 @@ function AdminPhotoSorter() {
                 className={`admin-sorter__tab ${activeTab === 'all' ? 'is-active' : ''}`}
                 onClick={() => setActiveTab('all')}
               >
-                All Photos <span>{counts.all}</span>
+                All <span>{counts.all}</span>
               </button>
               <button
                 type="button"
@@ -896,7 +1089,16 @@ function AdminPhotoSorter() {
                 }`}
                 onClick={() => setActiveTab('good')}
               >
-                ✅ Good / Sharp <span>{counts.good}</span>
+                ✅ Good <span>{counts.good}</span>
+              </button>
+              <button
+                type="button"
+                className={`admin-sorter__tab admin-sorter__tab--duplicate ${
+                  activeTab === 'duplicate' ? 'is-active' : ''
+                }`}
+                onClick={() => setActiveTab('duplicate')}
+              >
+                🔁 Repeats <span>{counts.duplicate}</span>
               </button>
               <button
                 type="button"
@@ -914,7 +1116,25 @@ function AdminPhotoSorter() {
                 }`}
                 onClick={() => setActiveTab('partial_blink')}
               >
-                ⚠️ Partial Blink (Confirm) <span>{counts.partial_blink}</span>
+                ⚠️ Partial Blink <span>{counts.partial_blink}</span>
+              </button>
+              <button
+                type="button"
+                className={`admin-sorter__tab admin-sorter__tab--covered ${
+                  activeTab === 'face_covered' ? 'is-active' : ''
+                }`}
+                onClick={() => setActiveTab('face_covered')}
+              >
+                ✋ Covered <span>{counts.face_covered}</span>
+              </button>
+              <button
+                type="button"
+                className={`admin-sorter__tab admin-sorter__tab--pose ${
+                  activeTab === 'bad_pose' ? 'is-active' : ''
+                }`}
+                onClick={() => setActiveTab('bad_pose')}
+              >
+                ⚠️ Bad Pose <span>{counts.bad_pose}</span>
               </button>
               <button
                 type="button"
@@ -927,26 +1147,16 @@ function AdminPhotoSorter() {
               </button>
             </div>
 
-            {/* Primary Batch Actions: 1) Move Rejected to 2 Separate Folders, 2) Upload Good to Event */}
+            {/* Primary Batch Actions */}
             <div className="admin-sorter__batch-actions">
               <button
                 type="button"
                 className="btn btn-outline admin-sorter__move-btn"
                 onClick={handleMoveToSeparateFolders}
-                disabled={
-                  scanning ||
-                  movingFiles ||
-                  uploadingGood ||
-                  (counts.eyes_closed === 0 &&
-                    counts.blurry === 0 &&
-                    counts.partial_blink === 0)
-                }
+                disabled={scanning || movingFiles || uploadingGood || rejectedCount === 0}
+                title="Automatically creates separate folders inside your PC folder and moves rejected photos"
               >
-                {movingFiles
-                  ? 'Moving to Folders...'
-                  : `📁 Move to 2 Folders (Eyes_Closed: ${
-                      counts.eyes_closed + counts.partial_blink
-                    } • Blurry: ${counts.blurry})`}
+                {movingFiles ? 'Moving to Folders...' : `📁 Move Rejected (${rejectedCount}) to PC Folders`}
               </button>
 
               <div className="admin-sorter__upload-group">
@@ -1002,11 +1212,17 @@ function AdminPhotoSorter() {
                     className="admin-sorter__thumb"
                   />
                   <span className={`admin-sorter__badge admin-sorter__badge--${item.category}`}>
-                    {item.category === 'good' && '✅ Good / Sharp'}
+                    {item.category === 'good' && '✅ Good'}
+                    {item.category === 'duplicate' && '🔁 Repeat'}
                     {item.category === 'eyes_closed' && '😑 Eyes Closed'}
-                    {item.category === 'partial_blink' && '⚠️ Partial Blink'}
+                    {item.category === 'partial_blink' && '⚠️ Partial'}
+                    {item.category === 'face_covered' && '✋ Covered'}
+                    {item.category === 'bad_pose' && '⚠️ Bad Pose'}
                     {item.category === 'blurry' && '🌫️ Blurry'}
                   </span>
+                  {item.isDuplicateBest && (
+                    <span className="admin-sorter__badge-best">⭐ Best Pick</span>
+                  )}
                   {item.movedToFolder && (
                     <span className="admin-sorter__moved-pill">
                       Moved &rarr; {item.movedToFolder}/
@@ -1020,7 +1236,7 @@ function AdminPhotoSorter() {
                       setPreviewId(item.id)
                     }}
                   >
-                    🔍 Preview &amp; Confirm
+                    🔍 Preview
                   </button>
                 </div>
 
@@ -1049,7 +1265,7 @@ function AdminPhotoSorter() {
                       }`}
                       onClick={() => handleChangePhotoCategory(item.id, 'good')}
                     >
-                      ✓ Keep Good
+                      ✓ Good
                     </button>
                     <button
                       type="button"
@@ -1058,7 +1274,34 @@ function AdminPhotoSorter() {
                       }`}
                       onClick={() => handleChangePhotoCategory(item.id, 'eyes_closed')}
                     >
-                      😑 Eyes Closed
+                      😑 Eyes
+                    </button>
+                    <button
+                      type="button"
+                      className={`admin-sorter__mini-btn ${
+                        item.category === 'duplicate' ? 'is-selected-dup' : ''
+                      }`}
+                      onClick={() => handleChangePhotoCategory(item.id, 'duplicate')}
+                    >
+                      🔁 Repeat
+                    </button>
+                    <button
+                      type="button"
+                      className={`admin-sorter__mini-btn ${
+                        item.category === 'face_covered' ? 'is-selected-covered' : ''
+                      }`}
+                      onClick={() => handleChangePhotoCategory(item.id, 'face_covered')}
+                    >
+                      ✋ Cover
+                    </button>
+                    <button
+                      type="button"
+                      className={`admin-sorter__mini-btn ${
+                        item.category === 'bad_pose' ? 'is-selected-pose' : ''
+                      }`}
+                      onClick={() => handleChangePhotoCategory(item.id, 'bad_pose')}
+                    >
+                      ⚠️ Pose
                     </button>
                     <button
                       type="button"
@@ -1067,7 +1310,7 @@ function AdminPhotoSorter() {
                       }`}
                       onClick={() => handleChangePhotoCategory(item.id, 'blurry')}
                     >
-                      🌫️ Blurry
+                      🌫️ Blur
                     </button>
                   </div>
                 </div>
@@ -1139,7 +1382,13 @@ function AdminPhotoSorter() {
                     <div
                       key={bIdx}
                       className={`admin-sorter-modal__face-box ${
-                        box.isEyesClosed ? 'is-closed' : 'is-open'
+                        box.isEyesClosed
+                          ? 'is-closed'
+                          : box.isFaceCovered
+                          ? 'is-covered'
+                          : box.isBadPose
+                          ? 'is-bad-pose'
+                          : 'is-open'
                       }`}
                       style={{
                         left: `${box.x * 100}%`,
@@ -1151,6 +1400,10 @@ function AdminPhotoSorter() {
                       <span className="admin-sorter-modal__face-tag">
                         {box.isEyesClosed
                           ? `😑 Eyes Closed (${box.blinkPercent}%)`
+                          : box.isFaceCovered
+                          ? `✋ Face Covered`
+                          : box.isBadPose
+                          ? `⚠️ Bad Pose`
                           : `👀 Eyes Open (Sharp: ${box.sharpness})`}
                       </span>
                     </div>
@@ -1172,8 +1425,11 @@ function AdminPhotoSorter() {
                 <span>
                   Dimensions: {previewItem.width} &times; {previewItem.height}px
                 </span>
-                <span>Sharpness Score: {previewItem.sharpnessScore}</span>
-                <span>Detected Faces: {previewItem.totalFaces}</span>
+                <span>Sharpness: {previewItem.sharpnessScore}</span>
+                <span>Faces: {previewItem.totalFaces}</span>
+                {previewItem.duplicateGroupId && (
+                  <span>Burst Group #{previewItem.duplicateGroupId}</span>
+                )}
               </div>
 
               <div className="admin-sorter-modal__confirm-btns">
@@ -1184,7 +1440,16 @@ function AdminPhotoSorter() {
                   }`}
                   onClick={() => handleChangePhotoCategory(previewItem.id, 'good')}
                 >
-                  ✅ Confirm as Good Photo
+                  ✅ Good Photo
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${
+                    previewItem.category === 'duplicate' ? 'btn-primary' : 'btn-outline'
+                  }`}
+                  onClick={() => handleChangePhotoCategory(previewItem.id, 'duplicate')}
+                >
+                  🔁 Duplicate
                 </button>
                 <button
                   type="button"
@@ -1193,7 +1458,25 @@ function AdminPhotoSorter() {
                   }`}
                   onClick={() => handleChangePhotoCategory(previewItem.id, 'eyes_closed')}
                 >
-                  😑 Confirm as Eyes Closed (Move to Eyes_Closed)
+                  😑 Eyes Closed
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${
+                    previewItem.category === 'face_covered' ? 'btn-primary' : 'btn-outline'
+                  }`}
+                  onClick={() => handleChangePhotoCategory(previewItem.id, 'face_covered')}
+                >
+                  ✋ Face Covered
+                </button>
+                <button
+                  type="button"
+                  className={`btn ${
+                    previewItem.category === 'bad_pose' ? 'btn-primary' : 'btn-outline'
+                  }`}
+                  onClick={() => handleChangePhotoCategory(previewItem.id, 'bad_pose')}
+                >
+                  ⚠️ Bad Pose
                 </button>
                 <button
                   type="button"
@@ -1202,7 +1485,7 @@ function AdminPhotoSorter() {
                   }`}
                   onClick={() => handleChangePhotoCategory(previewItem.id, 'blurry')}
                 >
-                  🌫️ Confirm as Blurry (Move to Blurry_Photos)
+                  🌫️ Blurry
                 </button>
               </div>
             </div>
@@ -1214,4 +1497,3 @@ function AdminPhotoSorter() {
 }
 
 export default AdminPhotoSorter
-

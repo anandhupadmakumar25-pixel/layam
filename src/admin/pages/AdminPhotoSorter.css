@@ -216,14 +216,14 @@
 .admin-sorter__tabs {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .admin-sorter__tab {
-  padding: 0.55rem 0.95rem;
-  font-size: 0.76rem;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
   color: var(--text-secondary);
@@ -277,7 +277,7 @@
 /* Photo Grid */
 .admin-sorter__grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(255px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 1.25rem;
 }
 
@@ -296,6 +296,18 @@
 
 .admin-sorter__card--partial_blink {
   border-color: rgba(245, 158, 11, 0.65);
+}
+
+.admin-sorter__card--duplicate {
+  border-color: rgba(14, 165, 233, 0.45);
+}
+
+.admin-sorter__card--face_covered {
+  border-color: rgba(234, 88, 12, 0.55);
+}
+
+.admin-sorter__card--bad_pose {
+  border-color: rgba(217, 119, 6, 0.55);
 }
 
 .admin-sorter__card--blurry {
@@ -332,10 +344,15 @@
   text-transform: uppercase;
   color: #ffffff;
   background-color: rgba(17, 17, 17, 0.82);
+  border-radius: 2px;
 }
 
 .admin-sorter__badge--good {
   background-color: rgba(21, 128, 61, 0.9);
+}
+
+.admin-sorter__badge--duplicate {
+  background-color: rgba(2, 132, 199, 0.92);
 }
 
 .admin-sorter__badge--eyes_closed {
@@ -346,8 +363,29 @@
   background-color: rgba(180, 83, 9, 0.94);
 }
 
+.admin-sorter__badge--face_covered {
+  background-color: rgba(234, 88, 12, 0.92);
+}
+
+.admin-sorter__badge--bad_pose {
+  background-color: rgba(217, 119, 6, 0.92);
+}
+
 .admin-sorter__badge--blurry {
   background-color: rgba(109, 40, 217, 0.92);
+}
+
+.admin-sorter__badge-best {
+  position: absolute;
+  top: 0.6rem;
+  right: 0.6rem;
+  padding: 0.24rem 0.55rem;
+  font-size: 0.66rem;
+  font-weight: 700;
+  background-color: #166534;
+  color: #86efac;
+  border: 1px solid #86efac;
+  border-radius: 2px;
 }
 
 .admin-sorter__moved-pill {
@@ -376,10 +414,10 @@
 }
 
 .admin-sorter__card-body {
-  padding: 0.9rem 1rem;
+  padding: 0.85rem 0.95rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.45rem;
 }
 
 .admin-sorter__card-title-row {
@@ -403,10 +441,11 @@
 }
 
 .admin-sorter__reason {
-  font-size: 0.78rem;
+  font-size: 0.76rem;
   color: var(--text-secondary);
   margin: 0;
-  line-height: 1.4;
+  line-height: 1.35;
+  min-height: 2rem;
 }
 
 .admin-sorter__metrics {
@@ -421,19 +460,20 @@
 .admin-sorter__card-actions {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 0.35rem;
+  gap: 0.3rem;
   margin-top: 0.25rem;
 }
 
 .admin-sorter__mini-btn {
-  padding: 0.36rem 0.3rem;
-  font-size: 0.68rem;
+  padding: 0.32rem 0.2rem;
+  font-size: 0.66rem;
   font-weight: 600;
   background-color: var(--bg-secondary);
   border: 1px solid var(--border-light);
   color: var(--text-secondary);
   cursor: pointer;
   text-align: center;
+  border-radius: 2px;
 }
 
 .admin-sorter__mini-btn.is-selected-good {
@@ -442,9 +482,27 @@
   color: #ffffff;
 }
 
+.admin-sorter__mini-btn.is-selected-dup {
+  background-color: #0284c7;
+  border-color: #0284c7;
+  color: #ffffff;
+}
+
 .admin-sorter__mini-btn.is-selected-eyes {
   background-color: #b91c1c;
   border-color: #b91c1c;
+  color: #ffffff;
+}
+
+.admin-sorter__mini-btn.is-selected-covered {
+  background-color: #ea580c;
+  border-color: #ea580c;
+  color: #ffffff;
+}
+
+.admin-sorter__mini-btn.is-selected-pose {
+  background-color: #d97706;
+  border-color: #d97706;
   color: #ffffff;
 }
 
@@ -572,6 +630,16 @@
   background-color: rgba(239, 68, 68, 0.14);
 }
 
+.admin-sorter-modal__face-box.is-covered {
+  border-color: #ea580c;
+  background-color: rgba(234, 88, 12, 0.16);
+}
+
+.admin-sorter-modal__face-box.is-bad-pose {
+  border-color: #d97706;
+  background-color: rgba(217, 119, 6, 0.16);
+}
+
 .admin-sorter-modal__face-tag {
   position: absolute;
   bottom: 100%;
@@ -589,6 +657,14 @@
   background-color: #dc2626;
 }
 
+.admin-sorter-modal__face-box.is-covered .admin-sorter-modal__face-tag {
+  background-color: #ea580c;
+}
+
+.admin-sorter-modal__face-box.is-bad-pose .admin-sorter-modal__face-tag {
+  background-color: #d97706;
+}
+
 .admin-sorter-modal__nav {
   position: absolute;
   top: 50%;
@@ -601,6 +677,10 @@
   border: 1px solid rgba(255, 255, 255, 0.3);
   font-size: 1.65rem;
   cursor: pointer;
+}
+
+.admin-sorter__batch-actions .admin-sorter__move-btn {
+  white-space: nowrap;
 }
 
 .admin-sorter-modal__nav--prev {
@@ -630,7 +710,7 @@
 
 .admin-sorter-modal__confirm-btns {
   display: flex;
-  gap: 0.6rem;
+  gap: 0.5rem;
   flex-wrap: wrap;
 }
 
